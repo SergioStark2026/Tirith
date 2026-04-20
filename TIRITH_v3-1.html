@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0e1014">
+<title>TIRITH v3 — Stark Future</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0e1014; --s1:#13161d; --s2:#181c26; --s3:#1e2330;
+  --b1:#252b3d; --b2:#2e3650; --b3:#3a4260;
+  --gold:#c8921a; --gold2:#e8ad3a; --gd:rgba(200,146,26,0.14);
+  --ok:#2db876; --okd:rgba(45,184,118,0.12);
+  --warn:#e09010; --warnd:rgba(224,144,16,0.12);
+  --err:#d44040; --errd:rgba(212,64,64,0.12);
+  --info:#3d8ef0; --infod:rgba(61,142,240,0.12);
+  --purple:#8b5cf6; --purpled:rgba(139,92,246,0.12);
+  --t1:#dce2f2; --t2:#8892aa; --t3:#4a5270;
+  --fd:'Syne',sans-serif; --fm:'DM Mono',monospace; --fb:'DM Sans',sans-serif;
+  --r:10px; --rs:6px; --nav:62px;
+}
+.light{--bg:#eef0f7;--s1:#fff;--s2:#e8ecf6;--s3:#dde2f0;--b1:#c8cedf;--b2:#b0b8d0;--t1:#111520;--t2:#4a5270;--t3:#9aa0b8;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:14px;transition:background .3s,color .3s;}
+::-webkit-scrollbar{width:2px;height:2px;}
+::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px;}
+
+/* LAYOUT */
+#app{display:flex;flex-direction:column;height:100vh;max-width:480px;margin:0 auto;}
+
+/* HEADER */
+.hdr{background:var(--s1);border-bottom:1px solid var(--b1);padding:11px 14px 9px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:relative;z-index:10;}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold) 0%,transparent 55%);}
+.hdr-logo{display:flex;align-items:center;gap:9px;cursor:pointer;}
+.ring{width:28px;height:28px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;}
+.ring::before{content:'';width:5px;height:5px;background:var(--gold);border-radius:50%;}
+.logo-t{font-family:var(--fd);font-size:1.15rem;font-weight:800;letter-spacing:3px;}
+.logo-t span{color:var(--gold);}
+.logo-s{font-family:var(--fm);font-size:0.48rem;color:var(--t3);letter-spacing:1.5px;margin-top:1px;}
+.hdr-r{display:flex;align-items:center;gap:7px;}
+.hdr-time{font-family:var(--fm);font-size:0.58rem;color:var(--t3);text-align:right;line-height:1.4;}
+.ibtn{width:28px;height:28px;border-radius:var(--rs);background:var(--s2);border:1px solid var(--b1);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all .2s;}
+.ibtn:hover{border-color:var(--gold);color:var(--gold);}
+.role-badge{font-family:var(--fm);font-size:0.5rem;padding:2px 6px;border-radius:3px;background:var(--gd);color:var(--gold);border:1px solid rgba(200,146,26,.3);}
+
+/* CONTENT */
+#cnt{flex:1;overflow:hidden;position:relative;}
+.view{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;animation:fu .2s ease;padding-bottom:calc(var(--nav) + 12px);}
+.view.active{display:flex;}
+@keyframes fu{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* BOTTOM NAV */
+.bnav{background:var(--s1);border-top:1px solid var(--b1);display:flex;flex-shrink:0;padding:5px 0 max(8px,env(safe-area-inset-bottom));height:var(--nav);position:relative;z-index:50;}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;cursor:pointer;padding:3px 1px;transition:all .15s;position:relative;}
+.ni-ico{font-size:1.05rem;line-height:1;}
+.ni-lbl{font-family:var(--fm);font-size:0.44rem;color:var(--t3);text-transform:uppercase;letter-spacing:.3px;transition:color .2s;}
+.ni.active .ni-lbl{color:var(--gold);}
+.ni.active::after{content:'';position:absolute;bottom:0;left:20%;right:20%;height:2px;background:var(--gold);border-radius:2px;}
+.ni-badge{position:absolute;top:1px;right:calc(50% - 18px);background:var(--err);color:#fff;font-family:var(--fm);font-size:0.44rem;padding:1px 4px;border-radius:5px;min-width:13px;text-align:center;}
+
+/* SECTION */
+.sh{padding:14px 14px 8px;}
+.st{font-family:var(--fd);font-size:1.1rem;font-weight:700;letter-spacing:1px;}
+.st span{color:var(--gold);}
+.ss{font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:2px;letter-spacing:1px;text-transform:uppercase;}
+
+/* CARD */
+.card{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:12px;margin:0 11px 9px;}
+.ct{font-family:var(--fm);font-size:0.55rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:0 11px 9px;}
+.st2{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 4px;text-align:center;}
+.sn{font-family:var(--fd);font-size:1.3rem;font-weight:800;color:var(--gold);line-height:1;}
+.sl{font-family:var(--fm);font-size:0.44rem;color:var(--t3);margin-top:2px;text-transform:uppercase;}
+
+/* BADGES */
+.bdg{font-family:var(--fm);font-size:0.55rem;padding:2px 7px;border-radius:3px;white-space:nowrap;}
+.b-ok{background:var(--okd);color:var(--ok);border:1px solid rgba(45,184,118,.25);}
+.b-warn{background:var(--warnd);color:var(--warn);border:1px solid rgba(224,144,16,.25);}
+.b-err{background:var(--errd);color:var(--err);border:1px solid rgba(212,64,64,.25);}
+.b-info{background:var(--infod);color:var(--info);border:1px solid rgba(61,142,240,.25);}
+.b-gold{background:var(--gd);color:var(--gold);border:1px solid rgba(200,146,26,.3);}
+.b-purple{background:var(--purpled);color:var(--purple);border:1px solid rgba(139,92,246,.25);}
+
+/* FORMS */
+.fld{margin-bottom:9px;}
+.fld label{font-family:var(--fm);font-size:0.55rem;color:var(--t3);display:block;margin-bottom:3px;text-transform:uppercase;letter-spacing:1px;}
+input[type=text],input[type=number],input[type=date],input[type=url],input[type=email],input[type=tel],select,textarea{width:100%;background:var(--s2);border:1px solid var(--b1);color:var(--t1);border-radius:var(--rs);padding:8px 11px;font-family:var(--fb);font-size:0.83rem;transition:border .2s;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);}
+textarea{resize:vertical;min-height:60px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;}
+
+/* BUTTONS */
+.btn{padding:9px 15px;border-radius:var(--rs);border:none;cursor:pointer;font-family:var(--fd);font-size:0.8rem;font-weight:700;letter-spacing:1px;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.bp{background:var(--gold);color:#080808;}
+.bp:hover{background:var(--gold2);}
+.bs{background:var(--s2);border:1px solid var(--b1);color:var(--t2);}
+.bs:hover{border-color:var(--gold);color:var(--gold);}
+.bd{background:var(--errd);border:1px solid rgba(212,64,64,.3);color:var(--err);}
+.bok{background:var(--okd);border:1px solid rgba(45,184,118,.3);color:var(--ok);}
+.bi{background:var(--infod);border:1px solid rgba(61,142,240,.3);color:var(--info);}
+.bsm{padding:5px 10px;font-size:0.68rem;}
+.bbl{width:100%;justify-content:center;}
+.br{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;}
+.bdsh{width:calc(100% - 22px);margin:0 11px 9px;padding:10px;background:transparent;border:1px dashed var(--b2);border-radius:var(--r);color:var(--t3);font-family:var(--fm);font-size:0.65rem;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:all .2s;}
+.bdsh:hover{border-color:var(--gold);color:var(--gold);}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:200;display:none;align-items:flex-end;backdrop-filter:blur(4px);}
+.mo.open{display:flex;}
+.md{background:var(--s1);border-top:2px solid var(--gold);border-radius:14px 14px 0 0;width:100%;max-width:480px;margin:0 auto;max-height:88vh;overflow-y:auto;animation:su .25s ease;padding:16px 14px max(20px,env(safe-area-inset-bottom));}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.mt{font-family:var(--fd);font-size:0.95rem;font-weight:700;letter-spacing:1px;}
+.mc{font-size:1.1rem;cursor:pointer;color:var(--t2);padding:5px;}
+
+/* LIST ITEMS */
+.li{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;margin:0 11px 7px;transition:border-color .2s;}
+.li-top{display:flex;justify-content:space-between;align-items:flex-start;gap:7px;}
+.li-name{font-family:var(--fd);font-size:0.88rem;font-weight:700;}
+.li-meta{font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:2px;}
+.li-act{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+
+/* ALERTS */
+.alrt{margin:0 11px 7px;padding:9px 12px;border-radius:var(--rs);display:flex;align-items:center;gap:9px;font-size:0.78rem;}
+.al-w{background:var(--warnd);border:1px solid rgba(224,144,16,.25);color:var(--warn);}
+.al-e{background:var(--errd);border:1px solid rgba(212,64,64,.25);color:var(--err);}
+.al-o{background:var(--okd);border:1px solid rgba(45,184,118,.25);color:var(--ok);}
+.al-i{background:var(--infod);border:1px solid rgba(61,142,240,.25);color:var(--info);}
+
+/* SEARCH */
+.srch{margin:0 11px 9px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:8px 12px;display:flex;align-items:center;gap:7px;}
+.srch input{background:none;border:none;color:var(--t1);font-family:var(--fb);font-size:0.83rem;flex:1;outline:none;}
+.srch input::placeholder{color:var(--t3);}
+
+/* TABS */
+.tabs{display:flex;gap:4px;padding:0 11px 9px;overflow-x:auto;scrollbar-width:none;}
+.tabs::-webkit-scrollbar{display:none;}
+.tab{flex-shrink:0;padding:5px 12px;border-radius:var(--rs);border:1px solid var(--b1);background:transparent;color:var(--t3);font-family:var(--fm);font-size:0.6rem;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.tab.active{background:var(--gd);border-color:rgba(200,146,26,.4);color:var(--gold);}
+
+/* PILLAR GRID */
+.pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 11px 9px;}
+.pc{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:13px 11px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden;}
+.pc:hover,.pc:active{border-color:var(--gold);}
+.pc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),transparent);opacity:0;transition:opacity .2s;}
+.pc:hover::before{opacity:1;}
+.pc-ico{font-size:1.3rem;margin-bottom:6px;}
+.pc-name{font-family:var(--fd);font-size:0.82rem;font-weight:700;letter-spacing:1px;}
+.pc-sub{font-family:var(--fm);font-size:0.5rem;color:var(--t3);margin-top:2px;}
+.pc-bdg{position:absolute;top:8px;right:8px;background:var(--err);color:#fff;font-family:var(--fm);font-size:0.5rem;padding:2px 5px;border-radius:7px;min-width:16px;text-align:center;}
+
+/* PROGRESS */
+.prog{background:var(--b1);border-radius:2px;height:3px;margin-top:4px;}
+.prog-f{height:100%;border-radius:2px;background:var(--gold);transition:width .5s;}
+
+/* CHAT */
+.cw{display:flex;flex-direction:column;height:100%;}
+.cm{flex:1;overflow-y:auto;padding:11px;display:flex;flex-direction:column;gap:9px;}
+.msg{max-width:87%;}
+.msg.u{align-self:flex-end;}
+.msg.i{align-self:flex-start;}
+.mn{font-family:var(--fm);font-size:0.5rem;color:var(--t3);margin-bottom:2px;}
+.msg.u .mn{text-align:right;}
+.mb{padding:8px 12px;border-radius:13px;font-size:0.8rem;line-height:1.55;}
+.msg.u .mb{background:var(--gold);color:#080808;border-bottom-right-radius:3px;font-weight:500;}
+.msg.i .mb{background:var(--s1);border:1px solid var(--b1);color:var(--t1);border-bottom-left-radius:3px;}
+.mtag{display:inline-flex;align-items:center;gap:3px;background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:3px;padding:2px 6px;font-family:var(--fm);font-size:0.5rem;color:var(--gold);margin-bottom:4px;}
+.cb{padding:8px 11px max(10px,env(safe-area-inset-bottom));background:var(--s1);border-top:1px solid var(--b1);flex-shrink:0;}
+.ctols{display:flex;gap:5px;margin-bottom:6px;overflow-x:auto;scrollbar-width:none;}
+.ctols::-webkit-scrollbar{display:none;}
+.ctol{flex-shrink:0;padding:4px 8px;border-radius:9px;background:var(--s2);border:1px solid var(--b1);color:var(--t3);font-family:var(--fm);font-size:0.55rem;cursor:pointer;transition:all .2s;}
+.ctol:hover{border-color:var(--gold);color:var(--gold);}
+.crow{display:flex;gap:6px;align-items:center;}
+.ci{flex:1;background:var(--s2);border:1px solid var(--b1);border-radius:16px;padding:8px 14px;color:var(--t1);font-family:var(--fb);font-size:0.8rem;outline:none;}
+.ci:focus{border-color:var(--gold);}
+.ci::placeholder{color:var(--t3);}
+.vbtn{width:34px;height:34px;border-radius:50%;background:var(--s2);border:1px solid var(--b1);color:var(--t2);font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.vbtn.rec{background:var(--errd);border-color:var(--err);color:var(--err);animation:pulse 1s infinite;}
+.csend{width:34px;height:34px;border-radius:50%;background:var(--gold);border:none;color:#000;font-size:0.85rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+
+/* IA STATUS */
+.ias{padding:7px 11px;background:var(--s1);border-bottom:1px solid var(--b1);display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.iadot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.iadot.on{background:var(--ok);box-shadow:0 0 5px var(--ok);}
+.iadot.off{background:var(--warn);}
+
+/* PHOTO AREA */
+.pha{border:1px dashed var(--b2);border-radius:var(--r);padding:15px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:9px;}
+.pha:hover{border-color:var(--gold);}
+.pha-ico{font-size:1.6rem;margin-bottom:5px;}
+.pha-t{font-family:var(--fm);font-size:0.62rem;color:var(--t3);}
+
+/* PHOTO BUTTONS */
+.photo-btns{display:flex;gap:7px;margin-bottom:9px;}
+.photo-btn{flex:1;padding:10px;border:1px dashed var(--b2);border-radius:var(--rs);background:transparent;color:var(--t3);font-family:var(--fm);font-size:0.62rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:all .2s;}
+.photo-btn:hover{border-color:var(--gold);color:var(--gold);}
+.photo-btn-ico{font-size:1.4rem;}
+
+/* VALUE */
+.vbig{font-family:var(--fd);font-size:1.6rem;font-weight:800;color:var(--ok);line-height:1;}
+.vlbl{font-family:var(--fm);font-size:0.55rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.vg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px;}
+.vi{background:var(--s2);border-radius:var(--rs);padding:8px;}
+.vin{font-family:var(--fd);font-size:1rem;font-weight:700;}
+.vil{font-family:var(--fm);font-size:0.5rem;color:var(--t3);margin-top:1px;}
+
+/* KANBAN */
+.kw{display:flex;gap:8px;padding:0 11px 9px;overflow-x:auto;}
+.kc{flex-shrink:0;width:185px;}
+.kch{font-family:var(--fm);font-size:0.58rem;text-transform:uppercase;letter-spacing:1px;color:var(--t3);margin-bottom:6px;display:flex;justify-content:space-between;}
+.kcard{background:var(--s1);border:1px solid var(--b1);border-radius:var(--rs);padding:8px;margin-bottom:6px;}
+.kct{font-family:var(--fd);font-size:0.8rem;font-weight:600;margin-bottom:2px;}
+.kcm{font-family:var(--fm);font-size:0.52rem;color:var(--t3);}
+
+/* BIB */
+.bf{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:10px 12px;margin:0 11px 6px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s;}
+.bf:hover{border-color:var(--b2);}
+.bfi{font-size:1.2rem;}
+.bfn{font-family:var(--fd);font-size:0.88rem;font-weight:600;}
+.bfc{font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:1px;}
+
+/* PLATFORM */
+.plat{background:var(--s1);border:1px solid var(--b1);border-radius:var(--r);padding:12px;margin:0 11px 7px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s;}
+.plat:hover{border-color:var(--gold);}
+.plat-ico{width:36px;height:36px;border-radius:var(--rs);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+
+/* CHART */
+.chart{background:var(--s2);border-radius:var(--rs);padding:9px;margin-top:8px;height:120px;display:flex;flex-direction:column;}
+.cbars{display:flex;align-items:flex-end;gap:5px;flex:1;padding:0 3px;}
+.cbar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end;}
+.cbar{width:100%;border-radius:2px 2px 0 0;min-height:3px;transition:height .5s ease;cursor:pointer;}
+.cbar.luz{background:var(--gold);}
+.cbar.agua{background:var(--info);}
+.cbar.gasto{background:var(--purple);}
+.clbl{font-family:var(--fm);font-size:0.44rem;color:var(--t3);text-align:center;}
+.cval{font-family:var(--fm);font-size:0.44rem;color:var(--t2);text-align:center;}
+
+/* SETTINGS */
+.srow{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--b1);}
+.slbl{font-size:0.83rem;font-weight:500;}
+.ssub{font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:1px;}
+.tog{width:40px;height:21px;background:var(--b2);border-radius:11px;cursor:pointer;position:relative;transition:background .3s;flex-shrink:0;}
+.tog.on{background:var(--gold);}
+.tog::after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .3s;}
+.tog.on::after{transform:translateX(19px);}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--nav) + 10px);left:50%;transform:translateX(-50%) translateY(8px);background:var(--s1);border:1px solid var(--gold);color:var(--t1);padding:8px 14px;border-radius:var(--r);font-family:var(--fm);font-size:0.68rem;z-index:300;opacity:0;transition:all .3s;white-space:nowrap;pointer-events:none;}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* GMAO SPECIFIC */
+.hier{font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:2px;}
+.hier span{color:var(--gold);}
+.status-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:5px;}
+.checklist-item{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1);}
+.checklist-item:last-child{border-bottom:none;}
+.chk{width:18px;height:18px;border:2px solid var(--b2);border-radius:3px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.chk.done{background:var(--ok);border-color:var(--ok);color:#fff;}
+.chk-lbl{font-size:0.82rem;flex:1;}
+.stock-low{border-color:var(--warn) !important;}
+.stock-critical{border-color:var(--err) !important;}
+.sep{font-family:var(--fm);font-size:0.55rem;color:var(--t3);text-transform:uppercase;letter-spacing:1px;padding:6px 11px 3px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-logo" onclick="goTo('v-home')">
+    <div class="ring"></div>
+    <div><div class="logo-t">TIR<span>ITH</span></div><div class="logo-s">STARK FUTURE · NAVE</div></div>
+  </div>
+  <div class="hdr-r">
+    <div class="role-badge" id="roleBadge">ADMIN</div>
+    <div class="hdr-time" id="hdrTime"></div>
+    <div class="ibtn" onclick="toggleTheme()">◑</div>
+  </div>
+</div>
+
+<!-- CONTENT -->
+<div id="cnt">
+
+<!-- HOME -->
+<div class="view active" id="v-home">
+  <div class="sh"><div class="st">Panel <span>Principal</span></div><div class="ss" id="hDate"></div></div>
+  <div id="homeAlerts"></div>
+  <div class="sg">
+    <div class="st2"><div class="sn" id="h-eq">0</div><div class="sl">Activos</div></div>
+    <div class="st2"><div class="sn" id="h-ot">0</div><div class="sl">OT Abiertas</div></div>
+    <div class="st2"><div class="sn" id="h-inc">0</div><div class="sl">Incidencias</div></div>
+    <div class="st2"><div class="sn" id="h-stk">0</div><div class="sl">Stock bajo</div></div>
+  </div>
+  <div class="sep">Módulos principales</div>
+  <div class="pg" id="mainPillars"></div>
+  <div class="sep">Acceso rápido</div>
+  <div class="pg" id="quickPillars"></div>
+  <div class="card" style="margin-top:4px;">
+    <div class="ct">Últimas incidencias / OT</div>
+    <div id="homeOT"></div>
+  </div>
+  <div class="card">
+    <div class="ct">Consumos — último mes</div>
+    <div style="display:flex;gap:12px;">
+      <div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:800;color:var(--gold)" id="hLuz">—</div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);">kWh luz</div></div>
+      <div><div style="font-family:var(--fd);font-size:1.1rem;font-weight:800;color:var(--info)" id="hAgua">—</div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);">m³ agua</div></div>
+      <div style="flex:1;"><div class="prog" style="margin-top:8px;"><div class="prog-f" id="hAhoProg" style="width:0%"></div></div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);margin-top:3px;" id="hAhoPct">Ahorro: 0€</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- GMAO — ACTIVOS -->
+<div class="view" id="v-activos">
+  <div class="sh"><div class="st">⚙️ <span>Activos</span></div><div class="ss">Ubicaciones · Sistemas · Equipos</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="stab(this,'ta-ubi')">Ubicaciones</div>
+    <div class="tab" onclick="stab(this,'ta-sis')">Sistemas</div>
+    <div class="tab" onclick="stab(this,'ta-eq')">Equipos</div>
+  </div>
+  <div id="ta-ubi">
+    <div class="srch"><span style="color:var(--t3)">🔍</span><input placeholder="Buscar ubicación..."></div>
+    <div id="ubiList"></div>
+    <button class="bdsh" onclick="openM('mUbi')">+ Añadir ubicación</button>
+  </div>
+  <div id="ta-sis" style="display:none">
+    <div id="sisList"></div>
+    <button class="bdsh" onclick="openM('mSis')">+ Añadir sistema</button>
+  </div>
+  <div id="ta-eq" style="display:none">
+    <div class="srch"><span style="color:var(--t3)">🔍</span><input placeholder="Buscar equipo..." oninput="filterEq(this.value)"></div>
+    <div class="tabs" style="padding-top:0">
+      <div class="tab active" onclick="filterEqEst('todos',this)">Todos</div>
+      <div class="tab" onclick="filterEqEst('operativo',this)">Operativos</div>
+      <div class="tab" onclick="filterEqEst('revision',this)">Revisión</div>
+      <div class="tab" onclick="filterEqEst('averia',this)">Avería</div>
+    </div>
+    <div id="eqList"></div>
+    <button class="bdsh" onclick="openM('mEquipo')">📷 Foto placa · + Añadir activo</button>
+  </div>
+</div>
+
+<!-- GMAO — INCIDENCIAS -->
+<div class="view" id="v-incidencias">
+  <div class="sh"><div class="st">🚨 <span>Incidencias</span></div><div class="ss">Registro · Seguimiento · Cierre</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="filterInc('todas',this)">Todas</div>
+    <div class="tab" onclick="filterInc('abierta',this)">Abiertas</div>
+    <div class="tab" onclick="filterInc('en_curso',this)">En curso</div>
+    <div class="tab" onclick="filterInc('cerrada',this)">Cerradas</div>
+  </div>
+  <div id="incList"></div>
+  <button class="bdsh" onclick="openM('mInc')">📷 Foto · + Nueva incidencia</button>
+</div>
+
+<!-- GMAO — OT -->
+<div class="view" id="v-ot">
+  <div class="sh"><div class="st">📋 <span>Órdenes de Trabajo</span></div><div class="ss">Planificadas · Correctivas · Preventivas</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="filterOT('todas',this)">Todas</div>
+    <div class="tab" onclick="filterOT('abierta',this)">Abiertas</div>
+    <div class="tab" onclick="filterOT('en_curso',this)">En curso</div>
+    <div class="tab" onclick="filterOT('cerrada',this)">Cerradas</div>
+  </div>
+  <div id="otList"></div>
+  <button class="bdsh" onclick="openM('mOT')">+ Nueva orden de trabajo</button>
+</div>
+
+<!-- GMAO — PREVENTIVO -->
+<div class="view" id="v-prev">
+  <div class="sh"><div class="st">🔔 <span>Preventivos</span></div><div class="ss">Planificación · Checklists · Historial</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="stab(this,'tp-plan')">Planificados</div>
+    <div class="tab" onclick="stab(this,'tp-chk')">Checklists</div>
+    <div class="tab" onclick="stab(this,'tp-hist')">Historial</div>
+  </div>
+  <div id="tp-plan">
+    <div id="prevList"></div>
+    <button class="bdsh" onclick="openM('mPrev')">+ Nuevo preventivo</button>
+  </div>
+  <div id="tp-chk" style="display:none">
+    <div id="chkList"></div>
+    <button class="bdsh" onclick="openM('mChecklist')">+ Nuevo checklist</button>
+  </div>
+  <div id="tp-hist" style="display:none">
+    <div id="prevHist"><div style="text-align:center;padding:20px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin historial aún</div></div>
+  </div>
+</div>
+
+<!-- STOCK -->
+<div class="view" id="v-stock">
+  <div class="sh"><div class="st">📦 <span>Stock Crítico</span></div><div class="ss">Repuestos · Consumibles · Alertas</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="stab(this,'ts-all')">Todo</div>
+    <div class="tab" onclick="stab(this,'ts-bajo')">Stock bajo</div>
+    <div class="tab" onclick="stab(this,'ts-mat')">Materiales</div>
+  </div>
+  <div id="ts-all">
+    <div id="stockList"></div>
+    <button class="bdsh" onclick="openM('mStock')">+ Añadir material / repuesto</button>
+  </div>
+  <div id="ts-bajo" style="display:none">
+    <div id="stockBajo"></div>
+  </div>
+  <div id="ts-mat" style="display:none">
+    <div id="stockMat"></div>
+    <button class="bdsh" onclick="openM('mStock')">+ Añadir material</button>
+  </div>
+</div>
+
+<!-- CONSUMOS -->
+<div class="view" id="v-consumos">
+  <div class="sh"><div class="st">📊 <span>Consumos</span></div><div class="ss">Luz · Agua · Facturas · Análisis</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="stab(this,'tc-luz')">Electricidad</div>
+    <div class="tab" onclick="stab(this,'tc-agua')">Agua</div>
+    <div class="tab" onclick="stab(this,'tc-otros')">Otros</div>
+    <div class="tab" onclick="stab(this,'tc-gastos')">Gastos</div>
+  </div>
+  <div id="tc-luz">
+    <div class="card"><div class="ct">Consumo eléctrico — kWh / mes</div><div class="chart"><div class="cbars" id="chartLuz"></div></div><div id="recomLuz" style="margin-top:8px;"></div></div>
+    <div id="facLuzList"></div>
+    <button class="bdsh" onclick="openM('mConsumoLuz')">+ Factura eléctrica</button>
+  </div>
+  <div id="tc-agua" style="display:none">
+    <div class="card"><div class="ct">Consumo agua — m³ / mes</div><div class="chart"><div class="cbars" id="chartAgua"></div></div><div id="recomAgua" style="margin-top:8px;"></div></div>
+    <div id="facAguaList"></div>
+    <button class="bdsh" onclick="openM('mConsumoAgua')">+ Factura agua</button>
+  </div>
+  <div id="tc-otros" style="display:none">
+    <div id="otrosConsumos"><div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Gas, residuos, aire comprimido...</div></div>
+    <button class="bdsh" onclick="openM('mConsumoOtro')">+ Otro consumo</button>
+  </div>
+  <div id="tc-gastos" style="display:none">
+    <div class="card"><div class="ct">Gastos externos — € / mes</div><div class="chart"><div class="cbars" id="chartGastos"></div></div></div>
+    <div id="gastosList"></div>
+  </div>
+</div>
+
+<!-- BIBLIOTECA -->
+<div class="view" id="v-bib">
+  <div class="sh"><div class="st">📚 <span>Biblioteca</span></div><div class="ss">Manuales · Reglamentos · Planos</div></div>
+  <div class="srch"><span style="color:var(--t3)">🔍</span><input placeholder="Buscar documentos..."></div>
+  <div style="padding:0 11px 6px;display:flex;justify-content:space-between;align-items:center;">
+    <div class="sep" style="padding:0">Carpetas</div>
+    <button class="btn bs bsm" onclick="openM('mCarpeta')">+ Carpeta</button>
+  </div>
+  <div id="bibList"></div>
+  <div class="sep">⭐ Favoritos</div>
+  <div id="favList"><div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin favoritos</div></div>
+  <div class="sep">🕐 Recientes</div>
+  <div id="recentBib"><div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin actividad</div></div>
+</div>
+
+<!-- MEJORAS -->
+<div class="view" id="v-mejoras">
+  <div class="sh"><div class="st">💡 <span>Mejoras</span></div><div class="ss">Propuestas · En estudio · Ejecutadas</div></div>
+  <div class="tabs">
+    <div class="tab active" onclick="stab(this,'tm-prop')">Propuestas</div>
+    <div class="tab" onclick="stab(this,'tm-est')">En estudio</div>
+    <div class="tab" onclick="stab(this,'tm-ejec')">Ejecutadas</div>
+  </div>
+  <div id="tm-prop"><div id="mejProp"></div><button class="bdsh" onclick="openM('mMejora')">+ Nueva mejora</button></div>
+  <div id="tm-est" style="display:none"><div id="mejEst"><div style="text-align:center;padding:16px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin mejoras en estudio</div></div></div>
+  <div id="tm-ejec" style="display:none"><div id="mejEjec"><div style="text-align:center;padding:16px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin mejoras ejecutadas</div></div></div>
+</div>
+
+<!-- VALOR -->
+<div class="view" id="v-valor">
+  <div class="sh"><div class="st">💰 <span>Valor Generado</span></div><div class="ss">Ahorro · ROI · Gasto externo</div></div>
+  <div class="card"><div class="vbig" id="vTotal">0 €</div><div class="vlbl">Ahorro total acumulado</div>
+    <div class="vg">
+      <div class="vi"><div class="vin" style="color:var(--ok)" id="vRes">0</div><div class="vil">Incidencias resueltas</div></div>
+      <div class="vi"><div class="vin" style="color:var(--err)" id="vExt">0€</div><div class="vil">Gasto externo</div></div>
+      <div class="vi"><div class="vin" style="color:var(--gold)" id="vMej">0</div><div class="vil">Mejoras ejecutadas</div></div>
+      <div class="vi"><div class="vin" style="color:var(--info)" id="vRoi">0€</div><div class="vil">ROI estimado/año</div></div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">Registro</div><div id="valorList"><div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin registros</div></div>
+    <button class="btn bs bsm" onclick="openM('mValor')" style="margin-top:9px">+ Registrar ahorro / gasto</button>
+  </div>
+</div>
+
+<!-- PROYECTOS -->
+<div class="view" id="v-proyectos">
+  <div class="sh"><div class="st">🏗️ <span>Proyectos</span></div><div class="ss">Pendientes · En curso · Realizados</div></div>
+  <div class="kw">
+    <div class="kc"><div class="kch"><span>⏳ Pendientes</span><span id="kp" style="color:var(--warn)">0</span></div><div id="kol-p"></div><button class="bdsh" style="width:100%;margin:0;" onclick="openM('mProy')">+</button></div>
+    <div class="kc"><div class="kch"><span>🔄 En curso</span><span id="ke" style="color:var(--info)">0</span></div><div id="kol-e"></div></div>
+    <div class="kc"><div class="kch"><span>✅ Realizados</span><span id="kr" style="color:var(--ok)">0</span></div><div id="kol-r"></div></div>
+  </div>
+</div>
+
+<!-- SECRETARIA -->
+<div class="view" id="v-sec">
+  <div class="sh"><div class="st">🗂️ <span>Secretaria</span></div><div class="ss">Informes · Presupuestos · Comunicación</div></div>
+  <div class="pg">
+    <div class="pc" onclick="openM('mInforme')"><div class="pc-ico">📄</div><div class="pc-name" style="font-size:0.75rem">INFORME</div><div class="pc-sub">Generar · PDF</div></div>
+    <div class="pc" onclick="openM('mPresup')"><div class="pc-ico">💶</div><div class="pc-name" style="font-size:0.75rem">PRESUPUESTO</div><div class="pc-sub">Crear · Exportar</div></div>
+    <div class="pc" onclick="showT('Gmail — conectar en Ajustes')"><div class="pc-ico">📧</div><div class="pc-name" style="font-size:0.75rem">GMAIL</div><div class="pc-sub">Preparado · Fase 2</div></div>
+    <div class="pc" onclick="showT('WhatsApp — conectar en Ajustes')"><div class="pc-ico">💬</div><div class="pc-name" style="font-size:0.75rem">WHATSAPP</div><div class="pc-sub">Preparado · Fase 2</div></div>
+  </div>
+  <div class="card"><div class="ct">Contactos y proveedores</div>
+    <div id="ctsList"><div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin contactos</div></div>
+    <div class="br"><button class="btn bs bsm" onclick="openM('mContacto')">+ Añadir</button><button class="btn bi bsm" onclick="importAgenda()">📱 Desde agenda</button></div>
+  </div>
+</div>
+
+<!-- PLATAFORMAS -->
+<div class="view" id="v-plat">
+  <div class="sh"><div class="st">🖥️ <span>Plataformas</span></div><div class="ss">Daikin · Orbis · Sistemas externos</div></div>
+  <div id="platList"><div style="text-align:center;padding:24px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Añade tus plataformas externas<br>Solo necesitas pegar la URL</div></div>
+  <button class="bdsh" onclick="openM('mPlat')">+ Añadir plataforma (pega la URL)</button>
+</div>
+
+<!-- IA -->
+<div class="view" id="v-ia">
+  <div class="cw">
+    <div class="ias">
+      <div class="iadot" id="iaDot"></div>
+      <div style="flex:1;"><div style="font-family:var(--fd);font-size:0.8rem;font-weight:700;">TIRITH IA</div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);" id="iaInfo">Configura API key en Ajustes</div></div>
+      <div id="iaBdg"></div>
+    </div>
+    <div class="cm" id="chatMsgs">
+      <div class="msg i"><div class="mn">TIRITH IA</div><div class="mb">Hola. Soy el asistente técnico de TIRITH.<br><br>Para activarme ve a <strong>Ajustes → IA</strong> y configura tu API key.<br><br>Compatible con <strong>Claude</strong> (recomendado — tu empresa tiene plan), <strong>ChatGPT</strong> y <strong>Gemini</strong>.<br><br>Una vez activo podré leer tus activos, incidencias, preventivos, documentos, analizar fotos de placas, planos y facturas.</div></div>
+    </div>
+    <div class="cb">
+      <div class="ctols">
+        <button class="ctol" onclick="cTool('foto')">📷 Foto</button>
+        <button class="ctol" onclick="cTool('placa')">🏷️ Placa técnica</button>
+        <button class="ctol" onclick="cTool('archivo')">📎 Archivo</button>
+        <button class="ctol" onclick="cTool('datos')">📋 Mis datos</button>
+        <button class="ctol" onclick="cTool('informe')">📄 Informe</button>
+        <button class="ctol" onclick="cTool('web')">🌐 Buscar web</button>
+      </div>
+      <div class="crow">
+        <button class="vbtn" id="vBtn" onclick="toggleVoice()">🎤</button>
+        <input class="ci" id="chatIn" placeholder="Pregunta sobre tu nave...">
+        <button class="csend" onclick="sendChat()">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AJUSTES -->
+<div class="view" id="v-ajustes">
+  <div class="sh"><div class="st">⚙️ <span>Ajustes</span></div><div class="ss">Configuración · IA · Usuarios · Backup</div></div>
+  <div class="card"><div class="ct">Apariencia</div>
+    <div class="srow"><div><div class="slbl">Modo oscuro</div><div class="ssub">Tema industrial</div></div><div class="tog on" id="thTog" onclick="toggleTheme()"></div></div>
+  </div>
+  <div class="card"><div class="ct">Inteligencia Artificial</div>
+    <div class="fld"><label>Proveedor</label>
+      <select id="aiProv" onchange="updateAIHint()">
+        <option value="anthropic">Claude — Anthropic (recomendado)</option>
+        <option value="openai">ChatGPT — OpenAI</option>
+        <option value="gemini">Gemini — Google</option>
+      </select>
+    </div>
+    <div class="fld"><label>API Key</label><input type="text" id="apiKey" placeholder="sk-ant-... / sk-... / AIza..."></div>
+    <div style="background:var(--s2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--t3);" id="aiHint">Tu empresa tiene plan Claude. Solicita la API key a IT.</div>
+    <button class="btn bp bsm" onclick="saveApiKey()">✅ Activar IA</button>
+  </div>
+  <div class="card"><div class="ct">Nave Industrial</div>
+    <div class="fld"><label>Nombre de la nave</label><input type="text" id="cfgNave" placeholder="Nave Principal Stark Future"></div>
+    <div class="fld"><label>Tu nombre / Rol</label><input type="text" id="cfgNombre" placeholder="Responsable Técnico Servicios Generales"></div>
+    <button class="btn bp bsm" onclick="saveConfig()">Guardar</button>
+  </div>
+  <div class="card"><div class="ct">Roles y usuarios</div>
+    <div id="userList"></div>
+    <button class="btn bs bsm" onclick="openM('mUsuario')" style="margin-top:9px">+ Añadir usuario</button>
+  </div>
+  <div class="card"><div class="ct">Conexiones externas</div>
+    <div class="srow"><div><div class="slbl">Google Drive</div><div class="ssub">Sync documentos · Fase 2</div></div><span class="bdg b-warn">PENDIENTE</span></div>
+    <div class="srow"><div><div class="slbl">Gmail</div><div class="ssub">Envío informes · Fase 2</div></div><span class="bdg b-warn">PENDIENTE</span></div>
+    <div class="srow"><div><div class="slbl">Google Calendar</div><div class="ssub">Preventivos · Fase 2</div></div><span class="bdg b-warn">PENDIENTE</span></div>
+  </div>
+  <div class="card"><div class="ct">Datos y backup</div>
+    <div class="br">
+      <button class="btn bs bsm" onclick="exportData()">⬇️ Exportar backup</button>
+      <button class="btn bs bsm" onclick="document.getElementById('impFile').click()">⬆️ Importar</button>
+    </div>
+    <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(this)">
+    <div style="margin-top:9px;"><button class="btn bd bsm" onclick="if(confirm('¿Borrar todos los datos?'))clearAll()">🗑️ Borrar todo</button></div>
+  </div>
+  <div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.55rem;color:var(--t3);">TIRITH v3.0 · GMAO Servicios Generales · Stark Future<br><span style="color:var(--gold)">La fortaleza que custodia el conocimiento de tu nave</span></div>
+</div>
+
+</div><!-- end cnt -->
+
+<!-- BOTTOM NAV -->
+<div class="bnav">
+  <div class="ni active" id="ni-home" onclick="goTo('v-home')"><div class="ni-ico">⬛</div><div class="ni-lbl">Inicio</div></div>
+  <div class="ni" id="ni-activos" onclick="goTo('v-activos')"><div class="ni-ico">⚙️</div><div class="ni-badge" id="nb-act" style="display:none">0</div><div class="ni-lbl">Activos</div></div>
+  <div class="ni" id="ni-inc" onclick="goTo('v-incidencias')"><div class="ni-ico">🚨</div><div class="ni-badge" id="nb-inc" style="display:none">0</div><div class="ni-lbl">Incid.</div></div>
+  <div class="ni" id="ni-ia" onclick="goTo('v-ia')"><div class="ni-ico">🤖</div><div class="ni-lbl">IA</div></div>
+  <div class="ni" id="ni-mas" onclick="openM('mMas')"><div class="ni-ico">⋯</div><div class="ni-lbl">Más</div></div>
+</div>
+
+</div><!-- end app -->
+
+<!-- MODAL MÁS -->
+<div class="mo" id="mMas">
+  <div class="md">
+    <div class="mh"><div class="mt">Todos los módulos</div><div class="mc" onclick="closeM('mMas')">✕</div></div>
+    <div class="pg">
+      <div class="pc" onclick="closeM('mMas');goTo('v-ot')"><div class="pc-ico">📋</div><div class="pc-name" style="font-size:0.75rem">ÓRDENES OT</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-prev')"><div class="pc-ico">🔔</div><div class="pc-name" style="font-size:0.75rem">PREVENTIVOS</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-stock')"><div class="pc-ico">📦</div><div class="pc-name" style="font-size:0.75rem">STOCK</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-consumos')"><div class="pc-ico">📊</div><div class="pc-name" style="font-size:0.75rem">CONSUMOS</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-bib')"><div class="pc-ico">📚</div><div class="pc-name" style="font-size:0.75rem">BIBLIOTECA</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-mejoras')"><div class="pc-ico">💡</div><div class="pc-name" style="font-size:0.75rem">MEJORAS</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-proyectos')"><div class="pc-ico">🏗️</div><div class="pc-name" style="font-size:0.75rem">PROYECTOS</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-valor')"><div class="pc-ico">💰</div><div class="pc-name" style="font-size:0.75rem">VALOR</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-sec')"><div class="pc-ico">🗂️</div><div class="pc-name" style="font-size:0.75rem">SECRETARIA</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-plat')"><div class="pc-ico">🖥️</div><div class="pc-name" style="font-size:0.75rem">PLATAFORMAS</div></div>
+      <div class="pc" onclick="closeM('mMas');goTo('v-ajustes')"><div class="pc-ico">⚙️</div><div class="pc-name" style="font-size:0.75rem">AJUSTES</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL UBICACIÓN -->
+<div class="mo" id="mUbi"><div class="md">
+  <div class="mh"><div class="mt">Nueva Ubicación</div><div class="mc" onclick="closeM('mUbi')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="ubi-nom" placeholder="Ej: Nave Principal, Zona A, Oficinas..."></div>
+  <div class="fld"><label>Descripción</label><input type="text" id="ubi-desc" placeholder="Descripción breve"></div>
+  <div class="br"><button class="btn bp" onclick="saveUbi()">Guardar</button><button class="btn bs" onclick="closeM('mUbi')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL SISTEMA -->
+<div class="mo" id="mSis"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Sistema</div><div class="mc" onclick="closeM('mSis')">✕</div></div>
+  <div class="fld"><label>Nombre del sistema</label>
+    <select id="sis-nom">
+      <option>Climatización y ventilación</option><option>Electricidad BT</option>
+      <option>Fontanería y saneamiento</option><option>Iluminación</option>
+      <option>Agua fría y caliente</option><option>Aire comprimido</option>
+      <option>Contra incendios PCI</option><option>Energías renovables</option>
+      <option>Telecomunicaciones</option><option>Otro</option>
+    </select>
+  </div>
+  <div class="fld"><label>Ubicación</label><select id="sis-ubi"><option value="">Seleccionar...</option></select></div>
+  <div class="fld"><label>Descripción</label><input type="text" id="sis-desc" placeholder="Descripción del sistema"></div>
+  <div class="br"><button class="btn bp" onclick="saveSis()">Guardar</button><button class="btn bs" onclick="closeM('mSis')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL EQUIPO -->
+<div class="mo" id="mEquipo"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Activo / Equipo</div><div class="mc" onclick="closeM('mEquipo')">✕</div></div>
+  <div class="photo-btns">
+    <button class="photo-btn" onclick="document.getElementById('eqCam').click()"><div class="photo-btn-ico">📷</div>Cámara<input type="file" id="eqCam" accept="image/*" capture="environment" style="display:none"></button>
+    <button class="photo-btn" onclick="document.getElementById('eqGal').click()"><div class="photo-btn-ico">🖼️</div>Galería<input type="file" id="eqGal" accept="image/*" style="display:none"></button>
+  </div>
+  <div class="fr"><div class="fld"><label>Nombre</label><input type="text" id="eq-nom" placeholder="Compresor 1"></div><div class="fld"><label>Código</label><input type="text" id="eq-cod" placeholder="COMP-01"></div></div>
+  <div class="fr">
+    <div class="fld"><label>Sistema</label><select id="eq-sis"><option value="">Seleccionar...</option></select></div>
+    <div class="fld"><label>Ubicación</label><select id="eq-ubi"><option value="">Seleccionar...</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fld"><label>Categoría</label>
+      <select id="eq-cat">
+        <option>Climatización</option><option>Ventilación</option><option>Electricidad</option>
+        <option>Fontanería</option><option>Iluminación</option><option>Aire comprimido</option>
+        <option>PCI</option><option>Maquinaria</option><option>Otro</option>
+      </select>
+    </div>
+    <div class="fld"><label>Estado</label>
+      <select id="eq-est">
+        <option value="operativo">✅ Operativo</option><option value="revision">⚠️ Revisión</option>
+        <option value="averia">🔴 Avería</option><option value="baja">⚫ Baja</option>
+      </select>
+    </div>
+  </div>
+  <div class="fr"><div class="fld"><label>Marca</label><input type="text" id="eq-marca"></div><div class="fld"><label>Modelo</label><input type="text" id="eq-mod"></div></div>
+  <div class="fr"><div class="fld"><label>Nº Serie</label><input type="text" id="eq-serie"></div><div class="fld"><label>Año instalación</label><input type="number" id="eq-año" placeholder="2020"></div></div>
+  <div class="fld"><label>Criticidad</label>
+    <select id="eq-crit"><option value="baja">🟢 Baja</option><option value="media">🟡 Media</option><option value="alta">🔴 Alta — Activo crítico</option></select>
+  </div>
+  <div class="fld"><label>Notas técnicas</label><textarea id="eq-notas" placeholder="Datos técnicos, observaciones..."></textarea></div>
+  <div class="br"><button class="btn bp" onclick="saveEq()">Guardar activo</button><button class="btn bs" onclick="closeM('mEquipo')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL INCIDENCIA -->
+<div class="mo" id="mInc"><div class="md">
+  <div class="mh"><div class="mt">Nueva Incidencia</div><div class="mc" onclick="closeM('mInc')">✕</div></div>
+  <div class="photo-btns">
+    <button class="photo-btn" onclick="document.getElementById('incCam').click()"><div class="photo-btn-ico">📷</div>Cámara<input type="file" id="incCam" accept="image/*" capture="environment" style="display:none"></button>
+    <button class="photo-btn" onclick="document.getElementById('incGal').click()"><div class="photo-btn-ico">🖼️</div>Galería<input type="file" id="incGal" accept="image/*" style="display:none"></button>
+  </div>
+  <div class="fld"><label>Descripción de la incidencia</label><textarea id="inc-desc" placeholder="Describe el problema detectado..."></textarea></div>
+  <div class="fr">
+    <div class="fld"><label>Activo / Zona</label><input type="text" id="inc-activo" placeholder="Clima Zona B"></div>
+    <div class="fld"><label>Prioridad</label>
+      <select id="inc-pri"><option value="baja">🟢 Baja</option><option value="normal">🟡 Normal</option><option value="alta">🟠 Alta</option><option value="urgente">🔴 Urgente</option></select>
+    </div>
+  </div>
+  <div class="fr">
+    <div class="fld"><label>Tipo</label>
+      <select id="inc-tipo"><option value="averia">Avería</option><option value="anomalia">Anomalía</option><option value="fuga">Fuga</option><option value="ruido">Ruido/Vibración</option><option value="otro">Otro</option></select>
+    </div>
+    <div class="fld"><label>Sistema afectado</label>
+      <select id="inc-sis"><option value="">General</option></select>
+    </div>
+  </div>
+  <div class="fld"><label>Notas adicionales</label><textarea id="inc-notas" style="min-height:50px;" placeholder="Condiciones, accesos especiales..."></textarea></div>
+  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 Una incidencia puede generar una OT. Se gestionan por separado.</div>
+  <div class="br"><button class="btn bp" onclick="saveInc()">Registrar incidencia</button><button class="btn bs" onclick="closeM('mInc')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL OT -->
+<div class="mo" id="mOT"><div class="md">
+  <div class="mh"><div class="mt">Nueva Orden de Trabajo</div><div class="mc" onclick="closeM('mOT')">✕</div></div>
+  <div class="photo-btns">
+    <button class="photo-btn" onclick="document.getElementById('otCam').click()"><div class="photo-btn-ico">📷</div>Cámara<input type="file" id="otCam" accept="image/*" capture="environment" style="display:none"></button>
+    <button class="photo-btn" onclick="document.getElementById('otGal').click()"><div class="photo-btn-ico">🖼️</div>Galería<input type="file" id="otGal" accept="image/*" style="display:none"></button>
+  </div>
+  <div class="fld"><label>Descripción del trabajo</label><textarea id="ot-desc" placeholder="Describe el trabajo a realizar..."></textarea></div>
+  <div class="fr">
+    <div class="fld"><label>Activo / Zona</label><input type="text" id="ot-activo" placeholder="Compresor Zona A"></div>
+    <div class="fld"><label>Tipo OT</label>
+      <select id="ot-tipo"><option value="correctiva">Correctiva</option><option value="preventiva">Preventiva</option><option value="mejora">Mejora</option><option value="inspeccion">Inspección</option></select>
+    </div>
+  </div>
+  <div class="fr">
+    <div class="fld"><label>Prioridad</label>
+      <select id="ot-pri"><option value="normal">Normal</option><option value="alta">Alta</option><option value="urgente">Urgente</option></select>
+    </div>
+    <div class="fld"><label>Responsable</label><input type="text" id="ot-resp" placeholder="Nombre técnico"></div>
+  </div>
+  <div class="fld"><label>Incidencia vinculada (opcional)</label><input type="text" id="ot-inc" placeholder="ID o descripción incidencia"></div>
+  <div class="fld"><label>Materiales necesarios</label><textarea id="ot-mats" style="min-height:45px;" placeholder="Lista de materiales previstos..."></textarea></div>
+  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 El coste se calcula automáticamente al añadir materiales usados al cerrar la OT</div>
+  <div class="br"><button class="btn bp" onclick="saveOT()">Abrir OT</button><button class="btn bs" onclick="closeM('mOT')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL PREVENTIVO -->
+<div class="mo" id="mPrev"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Preventivo</div><div class="mc" onclick="closeM('mPrev')">✕</div></div>
+  <div class="fr"><div class="fld"><label>Activo / Equipo</label><input type="text" id="pv-eq" placeholder="Compresor Zona A"></div><div class="fld"><label>Sistema</label><select id="pv-sis"><option value="">General</option></select></div></div>
+  <div class="fld"><label>Tarea de mantenimiento</label><input type="text" id="pv-tarea" placeholder="Cambio filtros y revisión general"></div>
+  <div class="fr">
+    <div class="fld"><label>Frecuencia</label>
+      <select id="pv-frec"><option value="semanal">Semanal</option><option value="mensual">Mensual</option><option value="trimestral">Trimestral</option><option value="semestral">Semestral</option><option value="anual">Anual</option></select>
+    </div>
+    <div class="fld"><label>Próxima fecha</label><input type="date" id="pv-fecha"></div>
+  </div>
+  <div class="fr"><div class="fld"><label>Responsable</label><input type="text" id="pv-resp" placeholder="Técnico responsable"></div><div class="fld"><label>Duración estimada (h)</label><input type="number" id="pv-dur" placeholder="1"></div></div>
+  <div class="fld"><label>Checklist vinculado (opcional)</label><input type="text" id="pv-chk" placeholder="Nombre del checklist"></div>
+  <div class="br"><button class="btn bp" onclick="savePrev()">Guardar</button><button class="btn bs" onclick="closeM('mPrev')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CHECKLIST -->
+<div class="mo" id="mChecklist"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Checklist</div><div class="mc" onclick="closeM('mChecklist')">✕</div></div>
+  <div class="fld"><label>Nombre del checklist</label><input type="text" id="chk-nom" placeholder="Ej: Revisión mensual climatización"></div>
+  <div class="fld"><label>Activo / Zona</label><input type="text" id="chk-activo" placeholder="Ej: Clima Zona A"></div>
+  <div class="fld"><label>Tareas (una por línea)</label><textarea id="chk-tareas" style="min-height:100px;" placeholder="Verificar presiones&#10;Limpiar filtros&#10;Comprobar temperaturas&#10;Revisar conexiones eléctricas"></textarea></div>
+  <div class="br"><button class="btn bp" onclick="saveChecklist()">Crear checklist</button><button class="btn bs" onclick="closeM('mChecklist')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL STOCK -->
+<div class="mo" id="mStock"><div class="md">
+  <div class="mh"><div class="mt">Añadir Material / Repuesto</div><div class="mc" onclick="closeM('mStock')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="stk-nom" placeholder="Magnetotérmico 25A Schneider"></div>
+  <div class="fld"><label>Referencia</label><input type="text" id="stk-ref" placeholder="A9F74125"></div>
+  <div class="fr3">
+    <div class="fld"><label>Stock actual</label><input type="number" id="stk-act" placeholder="0"></div>
+    <div class="fld"><label>Stock mínimo</label><input type="number" id="stk-min" placeholder="0"></div>
+    <div class="fld"><label>Unidad</label><input type="text" id="stk-uni" placeholder="ud"></div>
+  </div>
+  <div class="fr"><div class="fld"><label>Proveedor</label><input type="text" id="stk-prov" placeholder="Leroy Merlin"></div><div class="fld"><label>Precio (€)</label><input type="number" id="stk-precio" placeholder="0.00" step="0.01"></div></div>
+  <div class="fld"><label>Enlace proveedor</label><input type="url" id="stk-url" placeholder="https://..."></div>
+  <div class="fld"><label>Activo / Equipo vinculado</label><input type="text" id="stk-activo" placeholder="Ej: Compresor Zona A"></div>
+  <div class="br"><button class="btn bp" onclick="saveStock()">Guardar</button><button class="btn bs" onclick="closeM('mStock')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CONSUMO LUZ -->
+<div class="mo" id="mConsumoLuz"><div class="md">
+  <div class="mh"><div class="mt">Factura Eléctrica</div><div class="mc" onclick="closeM('mConsumoLuz')">✕</div></div>
+  <div class="fr"><div class="fld"><label>Período</label><input type="text" id="cluz-mes" placeholder="Marzo 2026"></div><div class="fld"><label>Consumo (kWh)</label><input type="number" id="cluz-kwh" placeholder="0"></div></div>
+  <div class="fr"><div class="fld"><label>Importe (€)</label><input type="number" id="cluz-imp" placeholder="0.00" step="0.01"></div><div class="fld"><label>€/kWh</label><input type="number" id="cluz-pkwh" placeholder="0.000" step="0.001"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveConsumo('luz')">Guardar</button><button class="btn bs" onclick="closeM('mConsumoLuz')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CONSUMO AGUA -->
+<div class="mo" id="mConsumoAgua"><div class="md">
+  <div class="mh"><div class="mt">Factura Agua</div><div class="mc" onclick="closeM('mConsumoAgua')">✕</div></div>
+  <div class="fr"><div class="fld"><label>Período</label><input type="text" id="cagua-mes" placeholder="Marzo 2026"></div><div class="fld"><label>Consumo (m³)</label><input type="number" id="cagua-m3" placeholder="0"></div></div>
+  <div class="fld"><label>Importe (€)</label><input type="number" id="cagua-imp" placeholder="0.00" step="0.01"></div>
+  <div class="br"><button class="btn bp" onclick="saveConsumo('agua')">Guardar</button><button class="btn bs" onclick="closeM('mConsumoAgua')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CONSUMO OTRO -->
+<div class="mo" id="mConsumoOtro"><div class="md">
+  <div class="mh"><div class="mt">Otro Consumo</div><div class="mc" onclick="closeM('mConsumoOtro')">✕</div></div>
+  <div class="fr"><div class="fld"><label>Tipo</label><input type="text" id="cotro-tipo" placeholder="Gas, Residuos, CO2..."></div><div class="fld"><label>Período</label><input type="text" id="cotro-mes" placeholder="Marzo 2026"></div></div>
+  <div class="fr"><div class="fld"><label>Importe (€)</label><input type="number" id="cotro-imp" placeholder="0"></div><div class="fld"><label>Cantidad + Unidad</label><input type="text" id="cotro-qty" placeholder="ej: 120 m³"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveConsumo('otro')">Guardar</button><button class="btn bs" onclick="closeM('mConsumoOtro')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CARPETA -->
+<div class="mo" id="mCarpeta"><div class="md">
+  <div class="mh"><div class="mt">Nueva Carpeta</div><div class="mc" onclick="closeM('mCarpeta')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="carp-nom" placeholder="Manuales Clima"></div>
+  <div class="fld"><label>Icono</label>
+    <select id="carp-ico"><option value="🌡️">🌡️ Clima</option><option value="⚡">⚡ Eléctrico</option><option value="🔩">🔩 Maquinaria</option><option value="📜">📜 Reglamentos</option><option value="📐">📐 Planos</option><option value="🧾">🧾 Facturas</option><option value="💡">💡 Mejoras</option><option value="🔧">🔧 Mantenimiento</option><option value="📁">📁 General</option></select>
+  </div>
+  <div class="br"><button class="btn bp" onclick="saveCarpeta()">Crear</button><button class="btn bs" onclick="closeM('mCarpeta')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL DOC -->
+<div class="mo" id="mDoc"><div class="md">
+  <div class="mh"><div class="mt" id="mDocT">Añadir documento</div><div class="mc" onclick="closeM('mDoc')">✕</div></div>
+  <input type="hidden" id="doc-carp">
+  <div class="fld"><label>Nombre del documento</label><input type="text" id="doc-nom" placeholder="Manual Daikin FTXM35R"></div>
+  <div class="fld"><label>Enlace (Drive, BOE, web...)</label><input type="url" id="doc-url" placeholder="https://..."></div>
+  <div class="fr"><div class="fld"><label>Tipo</label><select id="doc-tipo"><option>PDF</option><option>Enlace web</option><option>Excel</option><option>Plano</option><option>Esquema</option><option>Otro</option></select></div><div class="fld"><label>Activo vinculado</label><input type="text" id="doc-activo" placeholder="Ej: Daikin Zona B"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveDoc()">Guardar</button><button class="btn bs" onclick="closeM('mDoc')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL MEJORA -->
+<div class="mo" id="mMejora"><div class="md">
+  <div class="mh"><div class="mt">Nueva Mejora</div><div class="mc" onclick="closeM('mMejora')">✕</div></div>
+  <div class="fld"><label>Título</label><input type="text" id="mej-tit" placeholder="Cambio iluminación a LED nave principal"></div>
+  <div class="fld"><label>Descripción</label><textarea id="mej-desc" placeholder="Problema actual, solución, beneficios..."></textarea></div>
+  <div class="fr"><div class="fld"><label>Estado</label><select id="mej-est"><option value="propuesta">💡 Propuesta</option><option value="estudio">🔍 En estudio</option><option value="ejecutada">✅ Ejecutada</option></select></div><div class="fld"><label>Zona / Sistema</label><input type="text" id="mej-zona" placeholder="Nave principal"></div></div>
+  <div class="fr"><div class="fld"><label>Inversión € estimada</label><input type="number" id="mej-inv" placeholder="0"></div><div class="fld"><label>Ahorro anual € estimado</label><input type="number" id="mej-aho" placeholder="0"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveMejora()">Guardar</button><button class="btn bs" onclick="closeM('mMejora')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL PROYECTO -->
+<div class="mo" id="mProy"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Proyecto</div><div class="mc" onclick="closeM('mProy')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="pr-nom" placeholder="Renovación iluminación LED"></div>
+  <div class="fld"><label>Descripción</label><textarea id="pr-desc"></textarea></div>
+  <div class="fr"><div class="fld"><label>Estado</label><select id="pr-est"><option value="pendiente">⏳ Pendiente</option><option value="en_curso">🔄 En curso</option><option value="realizado">✅ Realizado</option></select></div><div class="fld"><label>Prioridad</label><select id="pr-pri"><option>Normal</option><option>Alta</option><option>Urgente</option></select></div></div>
+  <div class="fr"><div class="fld"><label>Inversión €</label><input type="number" id="pr-inv" placeholder="0"></div><div class="fld"><label>Ahorro anual €</label><input type="number" id="pr-aho" placeholder="0"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveProy()">Guardar</button><button class="btn bs" onclick="closeM('mProy')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL VALOR -->
+<div class="mo" id="mValor"><div class="md">
+  <div class="mh"><div class="mt">Registrar ahorro / gasto</div><div class="mc" onclick="closeM('mValor')">✕</div></div>
+  <div class="fld"><label>Tipo</label><select id="val-tipo"><option value="ahorro">💪 Ahorro — lo resolví yo</option><option value="externo">🏢 Gasto empresa externa</option><option value="mejora">📈 ROI de mejora</option></select></div>
+  <div class="fld"><label>Descripción</label><input type="text" id="val-desc" placeholder="Reparé avería clima sin empresa externa"></div>
+  <div class="fr"><div class="fld"><label>Importe €</label><input type="number" id="val-imp" placeholder="0"></div><div class="fld"><label>Empresa externa</label><input type="text" id="val-emp" placeholder="Si aplica"></div></div>
+  <div class="br"><button class="btn bp" onclick="saveValor()">Registrar</button><button class="btn bs" onclick="closeM('mValor')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL PLATAFORMA -->
+<div class="mo" id="mPlat"><div class="md">
+  <div class="mh"><div class="mt">Añadir Plataforma</div><div class="mc" onclick="closeM('mPlat')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="pl-nom" placeholder="Daikin On Site"></div>
+  <div class="fld"><label>URL — pega aquí el enlace</label><input type="url" id="pl-url" placeholder="https://..."></div>
+  <div class="fld"><label>Descripción</label><input type="text" id="pl-desc" placeholder="Control climatización"></div>
+  <div class="fld"><label>Icono</label><select id="pl-ico"><option value="🌡️">🌡️ Clima</option><option value="⚡">⚡ Eléctrico</option><option value="🚗">🚗 Vehículos eléctricos</option><option value="🔧">🔧 Mantenimiento</option><option value="📊">📊 Monitorización</option><option value="🌐">🌐 Otro</option></select></div>
+  <div class="br"><button class="btn bp" onclick="savePlat()">Añadir</button><button class="btn bs" onclick="closeM('mPlat')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL CONTACTO -->
+<div class="mo" id="mContacto"><div class="md">
+  <div class="mh"><div class="mt">Añadir Contacto</div><div class="mc" onclick="closeM('mContacto')">✕</div></div>
+  <div class="fld"><label>Nombre / Empresa</label><input type="text" id="ct-nom" placeholder="Electricidad García S.L."></div>
+  <div class="fr"><div class="fld"><label>Teléfono</label><input type="tel" id="ct-tel" placeholder="+34..."></div><div class="fld"><label>Email</label><input type="email" id="ct-email"></div></div>
+  <div class="fld"><label>Especialidad</label><select id="ct-tipo"><option>Electricidad</option><option>Climatización</option><option>Fontanería</option><option>Maquinaria</option><option>PCI</option><option>Proveedor material</option><option>Otro</option></select></div>
+  <div class="fld"><label>Notas</label><textarea id="ct-notas" style="min-height:45px;"></textarea></div>
+  <div class="br"><button class="btn bp" onclick="saveCt()">Guardar</button><button class="btn bs" onclick="closeM('mContacto')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL INFORME -->
+<div class="mo" id="mInforme"><div class="md">
+  <div class="mh"><div class="mt">Generar Informe</div><div class="mc" onclick="closeM('mInforme')">✕</div></div>
+  <div class="fld"><label>Tipo</label><select id="inf-tipo"><option>Informe mensual de mantenimiento</option><option>Estado de instalaciones</option><option>Incidencias y OT</option><option>Valor generado y ahorro</option><option>Consumos energéticos</option><option>Stock crítico</option></select></div>
+  <div class="fld"><label>Período</label><input type="text" id="inf-per" placeholder="Ej: Marzo 2026"></div>
+  <div class="fld"><label>Observaciones</label><textarea id="inf-obs" style="min-height:45px;" placeholder="Notas adicionales..."></textarea></div>
+  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.58rem;color:var(--gold);">💡 Con IA activa se genera automáticamente con tus datos</div>
+  <div class="br"><button class="btn bp" onclick="genInforme()">Generar</button><button class="btn bs" onclick="closeM('mInforme')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL PRESUPUESTO -->
+<div class="mo" id="mPresup"><div class="md">
+  <div class="mh"><div class="mt">Nuevo Presupuesto</div><div class="mc" onclick="closeM('mPresup')">✕</div></div>
+  <div class="fld"><label>Concepto</label><input type="text" id="pre-con" placeholder="Ej: Sustitución luminarias LED nave"></div>
+  <div class="fld"><label>Proveedor / Empresa</label><input type="text" id="pre-prov" placeholder="Nombre empresa"></div>
+  <div class="fr"><div class="fld"><label>Importe (€)</label><input type="number" id="pre-imp" placeholder="0.00" step="0.01"></div><div class="fld"><label>Fecha</label><input type="date" id="pre-fecha"></div></div>
+  <div class="fld"><label>Estado</label><select id="pre-est"><option value="borrador">📝 Borrador</option><option value="enviado">📤 Enviado</option><option value="aprobado">✅ Aprobado</option><option value="rechazado">❌ Rechazado</option></select></div>
+  <div class="fld"><label>Notas</label><textarea id="pre-notas" style="min-height:45px;"></textarea></div>
+  <div class="br"><button class="btn bp" onclick="savePresup()">Guardar</button><button class="btn bs" onclick="closeM('mPresup')">Cancelar</button></div>
+</div></div>
+
+<!-- MODAL USUARIO -->
+<div class="mo" id="mUsuario"><div class="md">
+  <div class="mh"><div class="mt">Añadir Usuario</div><div class="mc" onclick="closeM('mUsuario')">✕</div></div>
+  <div class="fld"><label>Nombre</label><input type="text" id="usr-nom" placeholder="Nombre del técnico"></div>
+  <div class="fld"><label>Rol</label>
+    <select id="usr-rol">
+      <option value="tecnico">🔧 Técnico — puede abrir/cerrar OT e incidencias</option>
+      <option value="supervisor">👁️ Supervisor — solo lectura</option>
+    </select>
+  </div>
+  <div style="background:var(--warnd);border:1px solid rgba(224,144,16,.2);border-radius:var(--rs);padding:8px;font-family:var(--fm);font-size:0.6rem;color:var(--warn);margin-bottom:9px;">⚠️ Tú eres el administrador. Los técnicos no pueden borrar datos críticos ni cambiar la configuración.</div>
+  <div class="br"><button class="btn bp" onclick="saveUsr()">Añadir</button><button class="btn bs" onclick="closeM('mUsuario')">Cancelar</button></div>
+</div></div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== DB =====
+const DB={
+  get:k=>{try{return JSON.parse(localStorage.getItem('t3_'+k))||[];}catch{return[];}},
+  getV:k=>{try{return localStorage.getItem('t3_'+k)||'';}catch{return'';}},
+  set:(k,v)=>localStorage.setItem('t3_'+k,JSON.stringify(v)),
+  setV:(k,v)=>localStorage.setItem('t3_'+k,v),
+  push:(k,v)=>{const a=DB.get(k);v.id=v.id||Date.now();a.push(v);DB.set(k,a);return v;}
+};
+
+// ===== NAV =====
+const NM={'v-home':'ni-home','v-activos':'ni-activos','v-incidencias':'ni-inc','v-ia':'ni-ia'};
+function goTo(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const ni=NM[id];if(ni)document.getElementById(ni).classList.add('active');
+  history.pushState({v:id},'','');
+  rv(id);
+}
+window.addEventListener('popstate',e=>{
+  if(e.state?.v){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById(e.state.v).classList.add('active');}
+  else goTo('v-home');
+});
+
+function stab(btn,tid){
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  const par=btn.closest('.view')||document.body;
+  par.querySelectorAll(':scope > div[id^="t"]:not(.tabs)').forEach(t=>{if(t.id!==tid&&t.id)t.style.display='none';});
+  const el=document.getElementById(tid);
+  if(el){el.style.display='block';rtab(tid);}
+}
+function rtab(t){
+  if(t==='ta-ubi')rUbi();if(t==='ta-sis')rSis();if(t==='ta-eq')rEq();
+  if(t==='tp-plan')rPrev();if(t==='tp-chk')rChk();
+  if(t==='ts-all')rStock();if(t==='ts-bajo')rStockBajo();
+  if(t==='tc-luz')rChartLuz();if(t==='tc-agua')rChartAgua();if(t==='tc-gastos')rChartGastos();
+  if(t==='tm-prop'||t==='tm-est'||t==='tm-ejec')rMejoras();
+}
+function rv(id){
+  if(id==='v-home')rHome();
+  if(id==='v-activos'){rUbi();rEq();}
+  if(id==='v-incidencias')rInc('todas');
+  if(id==='v-ot')rOT('todas');
+  if(id==='v-prev')rPrev();
+  if(id==='v-stock')rStock();
+  if(id==='v-consumos')rChartLuz();
+  if(id==='v-bib')rBib();
+  if(id==='v-mejoras')rMejoras();
+  if(id==='v-proyectos')rProy();
+  if(id==='v-valor')rValor();
+  if(id==='v-plat')rPlat();
+  if(id==='v-sec')rCts();
+  if(id==='v-ajustes'){loadCfg();rUsrs();}
+}
+
+// ===== MODALS =====
+function openM(id){document.getElementById(id).classList.add('open');}
+function closeM(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ===== TOAST =====
+function showT(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ===== THEME =====
+let dark=true;
+function toggleTheme(){
+  dark=!dark;document.body.classList.toggle('light',!dark);
+  const tog=document.getElementById('thTog');if(tog)tog.classList.toggle('on',dark);
+  document.querySelector('meta[name=theme-color]').content=dark?'#0e1014':'#eef0f7';
+}
+
+// ===== CLOCK =====
+function tick(){
+  const n=new Date(),d=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'],m=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const t=`${n.getHours().toString().padStart(2,'0')}:${n.getMinutes().toString().padStart(2,'0')}`;
+  document.getElementById('hdrTime').innerHTML=`${d[n.getDay()]} ${n.getDate()} ${m[n.getMonth()]}<br>${t}`;
+  document.getElementById('hDate').textContent=`${d[n.getDay()]} ${n.getDate()} ${m[n.getMonth()]} ${n.getFullYear()} · ${t}h`;
+}
+setInterval(tick,1000);tick();
+
+// ===== HELPERS =====
+function $v(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+function sv(id,v){const el=document.getElementById(id);if(el)el.value=v;}
+function clr(...ids){ids.forEach(id=>sv(id,''));}
+
+function bdg(est){
+  const cls={operativo:'b-ok',revision:'b-warn',averia:'b-err',baja:'',abierta:'b-err',en_curso:'b-info',cerrada:'b-ok',propuesta:'b-gold',estudio:'b-info',ejecutada:'b-ok',pendiente:'b-warn',en_curso2:'b-info',realizado:'b-ok',urgente:'b-err',alta:'b-warn',normal:'b-info',baja2:'b-ok'};
+  const lbl={operativo:'OPERATIVO',revision:'REVISIÓN',averia:'AVERÍA',baja:'BAJA',abierta:'ABIERTA',en_curso:'EN CURSO',cerrada:'CERRADA',propuesta:'PROPUESTA',estudio:'EN ESTUDIO',ejecutada:'EJECUTADA',pendiente:'PENDIENTE',realizado:'REALIZADO',urgente:'URGENTE',alta:'ALTA',normal:'NORMAL'};
+  return `<span class="bdg ${cls[est]||'b-info'}">${lbl[est]||est?.toUpperCase()||''}</span>`;
+}
+
+// ===== HOME =====
+function rHome(){
+  const eq=DB.get('equipos'),inc=DB.get('incidencias'),ot=DB.get('ot'),stk=DB.get('stock');
+  const otAb=ot.filter(o=>o.est!=='cerrada').length;
+  const incAb=inc.filter(i=>i.est!=='cerrada').length;
+  const stkBajo=stk.filter(s=>parseInt(s.act)<=parseInt(s.min||0)).length;
+  document.getElementById('h-eq').textContent=eq.length;
+  document.getElementById('h-ot').textContent=otAb;
+  document.getElementById('h-inc').textContent=incAb;
+  document.getElementById('h-stk').textContent=stkBajo;
+  const nb1=document.getElementById('nb-act'),nb2=document.getElementById('nb-inc');
+  if(otAb>0){nb1.style.display='block';nb1.textContent=otAb;}else nb1.style.display='none';
+  if(incAb>0){nb2.style.display='block';nb2.textContent=incAb;}else nb2.style.display='none';
+
+  const ac=document.getElementById('homeAlerts');ac.innerHTML='';
+  const urg=ot.filter(o=>o.pri==='urgente'&&o.est!=='cerrada');
+  if(urg.length)ac.innerHTML+=`<div class="alrt al-e">🔴 ${urg.length} OT urgente(s) pendiente(s)</div>`;
+  if(stkBajo>0)ac.innerHTML+=`<div class="alrt al-w">⚠️ ${stkBajo} material(es) con stock bajo</div>`;
+
+  // Pillars
+  document.getElementById('mainPillars').innerHTML=`
+    <div class="pc" onclick="goTo('v-activos')"><div class="pc-bdg" id="pb1">${eq.length}</div><div class="pc-ico">⚙️</div><div class="pc-name">ACTIVOS</div><div class="pc-sub">Equipos · Sistemas</div></div>
+    <div class="pc" onclick="goTo('v-incidencias')"><div class="pc-bdg" style="background:var(--err)">${incAb}</div><div class="pc-ico">🚨</div><div class="pc-name">INCIDENCIAS</div><div class="pc-sub">Registro · Seguimiento</div></div>
+    <div class="pc" onclick="goTo('v-ot')"><div class="pc-bdg">${otAb}</div><div class="pc-ico">📋</div><div class="pc-name">ÓRDENES OT</div><div class="pc-sub">Correctivas · Prev.</div></div>
+    <div class="pc" onclick="goTo('v-prev')"><div class="pc-ico">🔔</div><div class="pc-name">PREVENTIVOS</div><div class="pc-sub">Planificación · Chklst</div></div>
+    <div class="pc" onclick="goTo('v-stock')"><div class="pc-bdg" style="background:var(--warn)">${stkBajo||''}</div><div class="pc-ico">📦</div><div class="pc-name">STOCK</div><div class="pc-sub">Repuestos · Alertas</div></div>
+    <div class="pc" onclick="goTo('v-bib')"><div class="pc-ico">📚</div><div class="pc-name">BIBLIOTECA</div><div class="pc-sub">Manuales · Planos</div></div>`;
+
+  document.getElementById('quickPillars').innerHTML=`
+    <div class="pc" onclick="goTo('v-consumos')"><div class="pc-ico">📊</div><div class="pc-name">CONSUMOS</div><div class="pc-sub">Luz · Agua · Facturas</div></div>
+    <div class="pc" onclick="goTo('v-mejoras')"><div class="pc-ico">💡</div><div class="pc-name">MEJORAS</div><div class="pc-sub">Propuestas · ROI</div></div>
+    <div class="pc" onclick="goTo('v-valor')"><div class="pc-ico">💰</div><div class="pc-name">VALOR</div><div class="pc-sub">Ahorro · Externas</div></div>
+    <div class="pc" onclick="goTo('v-plat')"><div class="pc-ico">🖥️</div><div class="pc-name">PLATAFORMAS</div><div class="pc-sub">Daikin · Orbis · Web</div></div>`;
+
+  const recentOT=[...ot].reverse().slice(0,3);
+  const ho=document.getElementById('homeOT');
+  if(!recentOT.length){ho.innerHTML='<div style="text-align:center;padding:12px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin órdenes aún</div>';return;}
+  ho.innerHTML=recentOT.map(o=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1);gap:7px;"><div style="min-width:0;flex:1;"><div style="font-size:0.82rem;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${o.activo||'Sin activo'}</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);">${(o.desc||'').substring(0,35)}${o.desc?.length>35?'...':''}</div></div>${bdg(o.est)}</div>`).join('');
+
+  const cons=DB.get('consumos');
+  const ultLuz=cons.filter(c=>c.tipo==='luz').slice(-1)[0];
+  const ultAgua=cons.filter(c=>c.tipo==='agua').slice(-1)[0];
+  document.getElementById('hLuz').textContent=ultLuz?ultLuz.kwh+'kWh':'—';
+  document.getElementById('hAgua').textContent=ultAgua?ultAgua.m3+'m³':'—';
+  const val=DB.get('valor');
+  const aho=val.filter(v=>v.tipo==='ahorro').reduce((s,v)=>s+(parseFloat(v.imp)||0),0);
+  document.getElementById('hAhoProg').style.width=Math.min(100,(aho/1000)*100)+'%';
+  document.getElementById('hAhoPct').textContent=`Ahorro acumulado: ${aho.toFixed(0)}€`;
+}
+
+// ===== UBICACIONES =====
+function saveUbi(){
+  const u={nom:$v('ubi-nom'),desc:$v('ubi-desc')};
+  if(!u.nom){showT('Introduce el nombre');return;}
+  DB.push('ubicaciones',u);closeM('mUbi');showT('✅ Ubicación guardada');clr('ubi-nom','ubi-desc');rUbi();populateSelects();
+}
+function rUbi(){
+  const ubis=DB.get('ubicaciones');const el=document.getElementById('ubiList');
+  if(!ubis.length){el.innerHTML='<div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin ubicaciones. Añade zonas de tu nave.</div>';return;}
+  el.innerHTML=ubis.map(u=>`<div class="li"><div class="li-top"><div><div class="li-name">${u.nom}</div><div class="li-meta">${u.desc||''}</div></div></div><div class="li-act"><button class="btn bd bsm" onclick="delItem('ubicaciones',${u.id},rUbi)">🗑️</button></div></div>`).join('');
+}
+
+// ===== SISTEMAS =====
+function saveSis(){
+  const s={nom:$v('sis-nom'),ubi:$v('sis-ubi'),desc:$v('sis-desc')};
+  if(!s.nom){showT('Selecciona el sistema');return;}
+  DB.push('sistemas',s);closeM('mSis');showT('✅ Sistema guardado');clr('sis-desc');rSis();
+}
+function rSis(){
+  const sis=DB.get('sistemas');const el=document.getElementById('sisList');
+  if(!sis.length){el.innerHTML='<div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin sistemas. Añade climatización, electricidad...</div>';return;}
+  el.innerHTML=sis.map(s=>`<div class="li"><div class="li-top"><div><div class="li-name">${s.nom}</div><div class="li-meta">${s.ubi||'Sin ubicación asignada'}</div></div></div><div class="li-act"><button class="btn bd bsm" onclick="delItem('sistemas',${s.id},rSis)">🗑️</button></div></div>`).join('');
+}
+
+// ===== EQUIPOS =====
+function saveEq(){
+  const e={nom:$v('eq-nom'),cod:$v('eq-cod'),sis:$v('eq-sis'),ubi:$v('eq-ubi'),cat:$v('eq-cat'),est:$v('eq-est'),marca:$v('eq-marca'),mod:$v('eq-mod'),serie:$v('eq-serie'),año:$v('eq-año'),crit:$v('eq-crit'),notas:$v('eq-notas'),fecha:new Date().toLocaleDateString('es-ES')};
+  if(!e.nom){showT('Introduce el nombre');return;}
+  DB.push('equipos',e);closeM('mEquipo');showT('✅ Activo guardado');
+  clr('eq-nom','eq-cod','eq-marca','eq-mod','eq-serie','eq-año','eq-notas');rEq();rHome();
+}
+function rEq(f='',est='todos'){
+  let eq=DB.get('equipos');
+  if(f)eq=eq.filter(e=>(e.nom+e.ubi+e.cod).toLowerCase().includes(f.toLowerCase()));
+  if(est!=='todos')eq=eq.filter(e=>e.est===est);
+  const el=document.getElementById('eqList');
+  if(!eq.length){el.innerHTML='<div style="text-align:center;padding:20px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin activos. Añade el primero.</div>';return;}
+  el.innerHTML=eq.map(e=>`<div class="li" style="${e.crit==='alta'?'border-left:3px solid var(--err)':''}"><div class="li-top"><div style="min-width:0;flex:1;"><div class="li-name">${e.nom}${e.crit==='alta'?' 🔴':''}</div><div class="li-meta">${e.cod||''} · ${e.ubi||''} · ${e.sis||''}</div></div>${bdg(e.est)}</div><div class="hier">${e.marca||''} ${e.mod||''} · ${e.año||''}</div><div class="li-act"><button class="btn bi bsm" onclick="newOTFromEq('${e.nom}')">+ OT</button><button class="btn bd bsm" onclick="delItem('equipos',${e.id},()=>{rEq();rHome();})">🗑️</button></div></div>`).join('');
+}
+function filterEq(v){rEq(v);}
+function filterEqEst(est,btn){btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');rEq('',est);}
+function newOTFromEq(nom){sv('ot-activo',nom);openM('mOT');}
+
+// ===== INCIDENCIAS =====
+function saveInc(){
+  const i={desc:$v('inc-desc'),activo:$v('inc-activo'),pri:$v('inc-pri'),tipo:$v('inc-tipo'),sis:$v('inc-sis'),notas:$v('inc-notas'),est:'abierta',fecha:new Date().toLocaleDateString('es-ES')};
+  if(!i.desc){showT('Describe la incidencia');return;}
+  DB.push('incidencias',i);closeM('mInc');showT('✅ Incidencia registrada');clr('inc-desc','inc-activo','inc-notas');rInc('todas');rHome();
+}
+function rInc(fil='todas'){
+  let inc=DB.get('incidencias');
+  if(fil!=='todas')inc=inc.filter(i=>i.est===fil);
+  inc=[...inc].reverse();const el=document.getElementById('incList');
+  if(!inc.length){el.innerHTML='<div style="text-align:center;padding:20px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin incidencias en este estado</div>';return;}
+  el.innerHTML=inc.map(i=>`<div class="li" style="${i.pri==='urgente'?'border-color:var(--err)':i.pri==='alta'?'border-color:var(--warn)':''}"><div class="li-top"><div style="flex:1;min-width:0;"><div class="li-name">${i.activo||'Sin activo'}</div><div class="li-meta">${(i.desc||'').substring(0,45)}${i.desc?.length>45?'...':''}</div></div>${bdg(i.est)}</div><div class="hier">${i.tipo?.toUpperCase()||''} · ${i.pri?.toUpperCase()||''} · ${i.fecha||''}</div><div class="li-act">${i.est==='abierta'?`<button class="btn bi bsm" onclick="chgInc(${i.id},'en_curso')">▶ En curso</button>`:''} ${i.est==='en_curso'?`<button class="btn bok bsm" onclick="chgInc(${i.id},'cerrada')">✅ Cerrar</button>`:''} <button class="btn bi bsm" onclick="incToOT(${i.id})">→ OT</button> <button class="btn bd bsm" onclick="delItem('incidencias',${i.id},()=>rInc('todas'))">🗑️</button></div></div>`).join('');
+}
+function filterInc(est,btn){btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');rInc(est);}
+function chgInc(id,est){const inc=DB.get('incidencias'),i=inc.find(i=>i.id===id);if(i){i.est=est;if(est==='cerrada')i.fechaCierre=new Date().toLocaleDateString('es-ES');DB.set('incidencias',inc);rInc('todas');rHome();showT(est==='cerrada'?'✅ Incidencia cerrada':'🔄 En curso');}}
+function incToOT(id){const inc=DB.get('incidencias'),i=inc.find(i=>i.id===id);if(i){sv('ot-activo',i.activo||'');sv('ot-desc',i.desc||'');sv('ot-inc',`INC-${i.id}`);openM('mOT');showT('Incidencia vinculada a la OT');}}
+
+// ===== OT =====
+function saveOT(){
+  const o={desc:$v('ot-desc'),activo:$v('ot-activo'),tipo:$v('ot-tipo'),pri:$v('ot-pri'),resp:$v('ot-resp'),inc:$v('ot-inc'),mats:$v('ot-mats'),est:'abierta',coste:0,fecha:new Date().toLocaleDateString('es-ES')};
+  if(!o.desc){showT('Describe el trabajo');return;}
+  DB.push('ot',o);closeM('mOT');showT('✅ OT abierta');clr('ot-desc','ot-activo','ot-resp','ot-inc','ot-mats');rOT('todas');rHome();
+}
+function rOT(fil='todas'){
+  let ots=DB.get('ot');
+  if(fil!=='todas')ots=ots.filter(o=>o.est===fil);
+  ots=[...ots].reverse();const el=document.getElementById('otList');
+  if(!ots.length){el.innerHTML='<div style="text-align:center;padding:20px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin órdenes en este estado</div>';return;}
+  el.innerHTML=ots.map(o=>`<div class="li" style="${o.pri==='urgente'?'border-color:var(--err)':''}"><div class="li-top"><div style="flex:1;min-width:0;"><div class="li-name">${o.activo||'Sin activo'}</div><div class="li-meta">${(o.desc||'').substring(0,45)}${o.desc?.length>45?'...':''}</div></div>${bdg(o.est)}</div><div class="hier">${o.tipo?.toUpperCase()||''} · ${o.pri?.toUpperCase()||''} · ${o.fecha||''} ${o.resp?'· '+o.resp:''}</div>${o.inc?`<div style="font-family:var(--fm);font-size:0.55rem;color:var(--info);margin-top:2px;">🔗 ${o.inc}</div>`:''}<div class="li-act">${o.est==='abierta'?`<button class="btn bi bsm" onclick="chgOT(${o.id},'en_curso')">▶ En curso</button>`:''} ${o.est==='en_curso'?`<button class="btn bok bsm" onclick="cerrarOT(${o.id})">✅ Cerrar</button>`:''} ${o.est==='cerrada'?`<span style="font-family:var(--fm);font-size:0.55rem;color:var(--ok)">✅ ${o.fechaCierre||''}</span>`:''} <button class="btn bd bsm" onclick="delItem('ot',${o.id},()=>{rOT('todas');rHome();})">🗑️</button></div></div>`).join('');
+}
+function filterOT(est,btn){btn.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));btn.classList.add('active');rOT(est);}
+function chgOT(id,est){const ots=DB.get('ot'),o=ots.find(o=>o.id===id);if(o){o.est=est;DB.set('ot',ots);rOT('todas');rHome();showT('🔄 En curso');}}
+function cerrarOT(id){
+  const ots=DB.get('ot'),o=ots.find(o=>o.id===id);
+  if(o){o.est='cerrada';o.fechaCierre=new Date().toLocaleDateString('es-ES');
+  DB.push('valor',{tipo:'ahorro',desc:`OT cerrada: ${o.activo||''}`,imp:o.coste||0,emp:'',fecha:new Date().toLocaleDateString('es-ES')});
+  DB.set('ot',ots);rOT('todas');rHome();showT('✅ OT cerrada');}
+}
+
+// ===== PREVENTIVO =====
+function savePrev(){
+  const p={eq:$v('pv-eq'),sis:$v('pv-sis'),tarea:$v('pv-tarea'),frec:$v('pv-frec'),fecha:$v('pv-fecha'),resp:$v('pv-resp'),dur:$v('pv-dur'),chk:$v('pv-chk')};
+  if(!p.eq||!p.tarea){showT('Rellena equipo y tarea');return;}
+  DB.push('preventivos',p);closeM('mPrev');showT('✅ Preventivo guardado');clr('pv-eq','pv-tarea','pv-fecha','pv-resp','pv-dur','pv-chk');rPrev();
+}
+function rPrev(){
+  const items=DB.get('preventivos');const el=document.getElementById('prevList');
+  if(!items.length){el.innerHTML='<div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin preventivos configurados</div>';return;}
+  const hoy=new Date();
+  el.innerHTML=items.map(p=>{
+    const fp=p.fecha?new Date(p.fecha):null;
+    const dias=fp?Math.ceil((fp-hoy)/(1000*60*60*24)):null;
+    const alerta=dias!==null&&dias<=7;
+    return `<div class="li" style="${alerta?'border-color:var(--warn)':''}"><div class="li-top"><div><div class="li-name">${p.eq}</div><div class="li-meta">${p.tarea} ${p.resp?'· '+p.resp:''}</div></div><span class="bdg ${alerta?'b-warn':'b-info'}">${p.frec?.toUpperCase()}</span></div><div class="hier" style="color:${alerta?'var(--warn)':'var(--t3)'};">${p.fecha?`Próximo: ${p.fecha} ${dias!==null?`(${dias>0?'en '+dias+'d':dias===0?'HOY':'VENCIDO'})`:''}`:'Sin fecha'} ${p.dur?'· '+p.dur+'h':''}</div><div class="li-act"><button class="btn bok bsm" onclick="completarPrev(${p.id})">✅ Realizado</button><button class="btn bd bsm" onclick="delItem('preventivos',${p.id},rPrev)">🗑️</button></div></div>`;
+  }).join('');
+}
+function completarPrev(id){
+  const prevs=DB.get('preventivos'),p=prevs.find(p=>p.id===id);
+  if(p){DB.push('prevHist',{...p,completado:new Date().toLocaleDateString('es-ES')});delItem('preventivos',id,rPrev);showT('✅ Preventivo completado y archivado');}
+}
+
+// ===== CHECKLIST =====
+function saveChecklist(){
+  const c={nom:$v('chk-nom'),activo:$v('chk-activo'),tareas:$v('chk-tareas').split('\n').filter(t=>t.trim()).map(t=>({t:t.trim(),done:false})),fecha:new Date().toLocaleDateString('es-ES')};
+  if(!c.nom){showT('Introduce el nombre');return;}
+  DB.push('checklists',c);closeM('mChecklist');showT('✅ Checklist creado');clr('chk-nom','chk-activo','chk-tareas');rChk();
+}
+function rChk(){
+  const chks=DB.get('checklists');const el=document.getElementById('chkList');
+  if(!chks.length){el.innerHTML='<div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin checklists. Crea el primero.</div>';return;}
+  el.innerHTML=chks.map(c=>{
+    const done=c.tareas.filter(t=>t.done).length;const total=c.tareas.length;
+    return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;"><div><div style="font-family:var(--fd);font-size:0.9rem;font-weight:700;">${c.nom}</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);">${c.activo||''} · ${done}/${total} completadas</div></div><button class="btn bd bsm" onclick="delItem('checklists',${c.id},rChk)">🗑️</button></div><div class="prog"><div class="prog-f" style="width:${total?((done/total)*100).toFixed(0):0}%"></div></div><div style="margin-top:8px;">${c.tareas.map((t,i)=>`<div class="checklist-item"><div class="chk ${t.done?'done':''}" onclick="toggleChk(${c.id},${i})">${t.done?'✓':''}</div><div class="chk-lbl" style="${t.done?'text-decoration:line-through;color:var(--t3);':''}">${t.t}</div></div>`).join('')}</div></div>`;
+  }).join('');
+}
+function toggleChk(cid,idx){
+  const chks=DB.get('checklists'),c=chks.find(c=>c.id===cid);
+  if(c){c.tareas[idx].done=!c.tareas[idx].done;DB.set('checklists',chks);rChk();}
+}
+
+// ===== STOCK =====
+function saveStock(){
+  const s={nom:$v('stk-nom'),ref:$v('stk-ref'),act:parseFloat($v('stk-act'))||0,min:parseFloat($v('stk-min'))||0,uni:$v('stk-uni'),prov:$v('stk-prov'),precio:parseFloat($v('stk-precio'))||0,url:$v('stk-url'),activo:$v('stk-activo'),fecha:new Date().toLocaleDateString('es-ES')};
+  if(!s.nom){showT('Introduce el nombre');return;}
+  DB.push('stock',s);closeM('mStock');showT('✅ Material guardado');clr('stk-nom','stk-ref','stk-act','stk-min','stk-uni','stk-prov','stk-precio','stk-url','stk-activo');rStock();rHome();
+}
+function rStock(){
+  const items=DB.get('stock');const el=document.getElementById('stockList');
+  if(!items.length){el.innerHTML='<div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin materiales en stock</div>';return;}
+  el.innerHTML=items.map(s=>{
+    const bajo=s.act<=s.min;const critico=s.act===0;
+    return `<div class="li ${critico?'stock-critical':bajo?'stock-low':''}"><div class="li-top"><div style="flex:1;min-width:0;"><div class="li-name">${s.nom}</div><div class="li-meta">${s.ref||''} · ${s.activo||''}</div></div>${critico?'<span class="bdg b-err">SIN STOCK</span>':bajo?'<span class="bdg b-warn">BAJO</span>':'<span class="bdg b-ok">OK</span>'}</div><div class="hier">Stock: ${s.act} ${s.uni||'ud'} · Mín: ${s.min} ${s.uni||'ud'} ${s.precio?'· '+s.precio+'€':''}</div>${s.prov?`<div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:3px;">📦 ${s.prov} ${s.url?`<a href="${s.url}" target="_blank" style="color:var(--info)">→ Enlace</a>`:''}</div>`:''}<div class="li-act"><button class="btn bok bsm" onclick="ajustarStock(${s.id},1)">+1</button><button class="btn bd bsm" onclick="ajustarStock(${s.id},-1)">-1</button><button class="btn bd bsm" onclick="delItem('stock',${s.id},()=>{rStock();rHome();})">🗑️</button></div></div>`;
+  }).join('');
+}
+function rStockBajo(){
+  const items=DB.get('stock').filter(s=>s.act<=s.min);const el=document.getElementById('stockBajo');
+  if(!items.length){el.innerHTML='<div class="alrt al-o">✅ Todo el stock está por encima del mínimo</div>';return;}
+  el.innerHTML=items.map(s=>`<div class="li stock-low"><div class="li-top"><div><div class="li-name">${s.nom}</div><div class="li-meta">Stock actual: ${s.act} · Mínimo: ${s.min}</div></div><span class="bdg ${s.act===0?'b-err':'b-warn'}">${s.act===0?'URGENTE':'BAJO'}</span></div>${s.prov?`<div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);margin-top:3px;">📦 ${s.prov}</div>`:''}</div>`).join('');
+}
+function ajustarStock(id,delta){const stk=DB.get('stock'),s=stk.find(s=>s.id===id);if(s){s.act=Math.max(0,(parseFloat(s.act)||0)+delta);DB.set('stock',stk);rStock();rHome();}}
+
+// ===== CONSUMOS =====
+function saveConsumo(tipo){
+  let c={tipo};
+  if(tipo==='luz'){c={...c,mes:$v('cluz-mes'),kwh:parseFloat($v('cluz-kwh'))||0,imp:parseFloat($v('cluz-imp'))||0,pkwh:parseFloat($v('cluz-pkwh'))||0};closeM('mConsumoLuz');clr('cluz-mes','cluz-kwh','cluz-imp','cluz-pkwh');}
+  if(tipo==='agua'){c={...c,mes:$v('cagua-mes'),m3:parseFloat($v('cagua-m3'))||0,imp:parseFloat($v('cagua-imp'))||0};closeM('mConsumoAgua');clr('cagua-mes','cagua-m3','cagua-imp');}
+  if(tipo==='otro'){c={...c,tipoN:$v('cotro-tipo'),mes:$v('cotro-mes'),imp:parseFloat($v('cotro-imp'))||0,qty:$v('cotro-qty')};closeM('mConsumoOtro');}
+  DB.push('consumos',c);showT('✅ Consumo guardado');
+  if(tipo==='luz')rChartLuz();if(tipo==='agua')rChartAgua();rHome();
+}
+function rChart(canvasId,datos,key,color){
+  const el=document.getElementById(canvasId);if(!el)return;
+  if(!datos.length){el.innerHTML='<div style="font-family:var(--fm);font-size:0.62rem;color:var(--t3);text-align:center;padding:25px;">Añade facturas para ver la gráfica</div>';return;}
+  const max=Math.max(...datos.map(d=>d[key]||0),1);
+  el.innerHTML=datos.map(d=>`<div class="cbar-w"><div class="cval">${d[key]||0}</div><div class="cbar ${color}" style="height:${Math.max(4,((d[key]||0)/max)*80)}px" title="${d.mes}: ${d[key]} "></div><div class="clbl">${(d.mes||'').substring(0,3)}</div></div>`).join('');
+}
+function rChartLuz(){
+  const datos=DB.get('consumos').filter(c=>c.tipo==='luz').slice(-6);
+  rChart('chartLuz',datos,'kwh','luz');
+  const r=document.getElementById('recomLuz');if(!r)return;
+  if(datos.length>=2){const u=datos[datos.length-1],a=datos[datos.length-2];const d=((u.kwh-a.kwh)/a.kwh*100).toFixed(0);r.innerHTML=`<div class="alrt ${d>10?'al-e':d<-5?'al-o':'al-w'}">${d>10?'📈 Consumo elevado. Revisa climatización y horarios.':d<-5?'✅ Consumo reduciéndose. Buen trabajo.':'⚡ Consumo estable.'} (${d>0?'+':''}${d}% vs mes anterior)</div>`;}
+  const facEl=document.getElementById('facLuzList');
+  const facs=[...datos].reverse();
+  facEl.innerHTML=facs.map(f=>`<div class="li"><div class="li-top"><div><div class="li-name">${f.mes}</div><div class="li-meta">${f.kwh} kWh · ${f.pkwh||'—'}€/kWh</div></div><div style="font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--gold)">${f.imp?.toFixed(2)||0}€</div></div></div>`).join('');
+}
+function rChartAgua(){
+  const datos=DB.get('consumos').filter(c=>c.tipo==='agua').slice(-6);
+  rChart('chartAgua',datos,'m3','agua');
+  const r=document.getElementById('recomAgua');if(!r)return;
+  if(datos.length>=2){const u=datos[datos.length-1],a=datos[datos.length-2];const d=((u.m3-a.m3)/a.m3*100).toFixed(0);r.innerHTML=`<div class="alrt ${d>15?'al-e':d<-5?'al-o':'al-w'}">${d>15?'⚠️ Consumo de agua elevado. Verifica posibles fugas.':d<-5?'✅ Consumo de agua reduciéndose.':'💧 Consumo estable.'}</div>`;}
+  const facEl=document.getElementById('facAguaList');
+  const facs=[...datos].reverse();
+  facEl.innerHTML=facs.map(f=>`<div class="li"><div class="li-top"><div><div class="li-name">${f.mes}</div><div class="li-meta">${f.m3} m³</div></div><div style="font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--info)">${f.imp?.toFixed(2)||0}€</div></div></div>`).join('');
+}
+function rChartGastos(){
+  const val=DB.get('valor').filter(v=>v.tipo==='externo').slice(-6);
+  const el=document.getElementById('chartGastos');if(!el)return;
+  if(!val.length){el.innerHTML='<div style="font-family:var(--fm);font-size:0.62rem;color:var(--t3);text-align:center;padding:25px;">Sin gastos externos registrados</div>';return;}
+  const max=Math.max(...val.map(v=>v.imp||0),1);
+  el.innerHTML=val.map(v=>`<div class="cbar-w"><div class="cval">${v.imp||0}€</div><div class="cbar gasto" style="height:${Math.max(4,((v.imp||0)/max)*80)}px"></div><div class="clbl">${(v.fecha||'').substring(0,5)}</div></div>`).join('');
+  const gasEl=document.getElementById('gastosList');if(gasEl)gasEl.innerHTML=[...val].reverse().map(v=>`<div class="li"><div class="li-top"><div><div class="li-name">${v.desc||'Sin descripción'}</div><div class="li-meta">${v.emp||''} · ${v.fecha||''}</div></div><div style="font-family:var(--fd);font-size:1rem;font-weight:700;color:var(--err)">-${v.imp}€</div></div></div>`).join('');
+}
+
+// ===== BIBLIOTECA =====
+function saveCarpeta(){
+  const c={nom:$v('carp-nom'),ico:$v('carp-ico'),docs:[]};
+  if(!c.nom){showT('Introduce el nombre');return;}
+  DB.push('carpetas',c);closeM('mCarpeta');showT('✅ Carpeta creada');sv('carp-nom','');rBib();
+}
+function rBib(){
+  let carps=DB.get('carpetas');
+  if(!carps.length){
+    carps=[{id:1,nom:'Manuales Clima',ico:'🌡️',docs:[]},{id:2,nom:'Manuales Eléctrico',ico:'⚡',docs:[]},{id:3,nom:'Planos y Esquemas',ico:'📐',docs:[]},{id:4,nom:'Reglamentos',ico:'📜',docs:[]},{id:5,nom:'Manuales Maquinaria',ico:'🔩',docs:[]},{id:6,nom:'Facturas',ico:'🧾',docs:[]},{id:7,nom:'Mejoras y Proyectos',ico:'💡',docs:[]},{id:8,nom:'Presupuestos',ico:'💶',docs:[]}];
+    DB.set('carpetas',carps);
+  }
+  document.getElementById('bibList').innerHTML=carps.map(c=>`<div class="bf"><div class="bfi">${c.ico}</div><div style="flex:1;"><div class="bfn">${c.nom}</div><div class="bfc">${(c.docs||[]).length} documentos</div></div><div style="display:flex;align-items:center;gap:6px;"><button class="btn bi bsm" onclick="abrirCarp(${c.id},event)">+ Doc</button><button class="btn bd bsm" onclick="delCarp(${c.id},event)">🗑️</button><span style="color:var(--t3)">›</span></div></div>`).join('');
+}
+function abrirCarp(id,e){e.stopPropagation();sv('doc-carp',id);const c=DB.get('carpetas').find(c=>c.id===id);if(c)document.getElementById('mDocT').textContent=`+ Doc en: ${c.nom}`;openM('mDoc');}
+function saveDoc(){
+  const carpId=parseInt($v('doc-carp'));const doc={id:Date.now(),nom:$v('doc-nom'),url:$v('doc-url'),tipo:$v('doc-tipo'),activo:$v('doc-activo')};
+  if(!doc.nom){showT('Introduce el nombre del documento');return;}
+  const carps=DB.get('carpetas'),c=carps.find(c=>c.id===carpId);
+  if(c){if(!c.docs)c.docs=[];c.docs.push(doc);DB.set('carpetas',carps);closeM('mDoc');showT('✅ Documento añadido');clr('doc-nom','doc-url','doc-activo');rBib();}
+}
+function delCarp(id,e){e.stopPropagation();if(!confirm('¿Eliminar carpeta y sus documentos?'))return;DB.set('carpetas',DB.get('carpetas').filter(c=>c.id!==id));rBib();showT('Carpeta eliminada');}
+
+// ===== MEJORAS =====
+function saveMejora(){
+  const m={tit:$v('mej-tit'),desc:$v('mej-desc'),est:$v('mej-est'),zona:$v('mej-zona'),inv:$v('mej-inv'),aho:$v('mej-aho'),fecha:new Date().toLocaleDateString('es-ES')};
+  if(!m.tit){showT('Introduce el título');return;}
+  DB.push('mejoras',m);closeM('mMejora');showT('✅ Mejora guardada');clr('mej-tit','mej-desc','mej-zona','mej-inv','mej-aho');rMejoras();
+}
+function rMejoras(){
+  const mejs=DB.get('mejoras');
+  const map={propuesta:'mejProp',estudio:'mejEst',ejecutada:'mejEjec'};
+  Object.entries(map).forEach(([est,elId])=>{
+    const el=document.getElementById(elId);if(!el)return;
+    const items=mejs.filter(m=>m.est===est);
+    if(!items.length){el.innerHTML=`<div style="text-align:center;padding:14px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin mejoras en este estado</div>`;return;}
+    el.innerHTML=items.map(m=>`<div class="li"><div class="li-top"><div style="flex:1;min-width:0;"><div class="li-name">${m.tit}</div><div class="li-meta">${m.zona||''} · ${m.fecha}</div></div></div>${m.desc?`<div style="font-size:0.78rem;color:var(--t2);margin-top:5px;">${m.desc.substring(0,80)}${m.desc.length>80?'...':''}</div>`:''}<div class="status-row">${m.inv?`<span class="bdg b-warn">Inv: ${m.inv}€</span>`:''} ${m.aho?`<span class="bdg b-ok">Ahorro: ${m.aho}€/año</span>`:''} ${m.inv&&m.aho?`<span class="bdg b-info">ROI: ${(m.inv/m.aho).toFixed(1)} años</span>`:''}</div><div class="li-act">${m.est==='propuesta'?`<button class="btn bi bsm" onclick="chgMej(${m.id},'estudio')">→ Estudio</button>`:''} ${m.est==='estudio'?`<button class="btn bok bsm" onclick="chgMej(${m.id},'ejecutada')">✅ Ejecutar</button>`:''} <button class="btn bd bsm" onclick="delItem('mejoras',${m.id},rMejoras)">🗑️</button></div></div>`).join('');
+  });
+}
+function chgMej(id,est){const ms=DB.get('mejoras'),m=ms.find(m=>m.id===id);if(m){m.est=est;DB.set('mejoras',ms);rMejoras();showT('Actualizado');}}
+
+// ===== PROYECTOS =====
+function saveProy(){
+  const p={nom:$v('pr-nom'),desc:$v('pr-desc'),est:$v('pr-est'),pri:$v('pr-pri'),inv:$v('pr-inv'),aho:$v('pr-aho'),fecha:new Date().toLocaleDateString('es-ES')};
+  if(!p.nom){showT('Introduce el nombre');return;}
+  DB.push('proyectos',p);closeM('mProy');showT('✅ Proyecto guardado');clr('pr-nom','pr-desc','pr-inv','pr-aho');rProy();
+}
+function rProy(){
+  const pros=DB.get('proyectos');
+  [['pendiente','kp','kol-p'],['en_curso','ke','kol-e'],['realizado','kr','kol-r']].forEach(([est,cntId,colId])=>{
+    const items=pros.filter(p=>p.est===est);
+    document.getElementById(cntId).textContent=items.length;
+    const col=document.getElementById(colId);
+    if(!items.length){col.innerHTML=`<div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);text-align:center;padding:10px;">Vacío</div>`;return;}
+    col.innerHTML=items.map(p=>`<div class="kcard"><div class="kct">${p.nom}</div><div class="kcm">${p.pri} · ${p.fecha}</div>${p.inv?`<div class="kcm" style="color:var(--gold);margin-top:2px;">Inv: ${p.inv}€</div>`:''}<div style="display:flex;gap:3px;margin-top:6px;">${p.est!=='realizado'?`<button class="btn bok bsm" style="font-size:0.58rem;padding:3px 7px;" onclick="chgProy(${p.id},'${p.est==='pendiente'?'en_curso':'realizado'}')">→</button>`:''}<button class="btn bd bsm" style="font-size:0.58rem;padding:3px 7px;" onclick="delItem('proyectos',${p.id},rProy)">🗑️</button></div></div>`).join('');
+  });
+}
+function chgProy(id,est){const ps=DB.get('proyectos'),p=ps.find(p=>p.id===id);if(p){p.est=est;DB.set('proyectos',ps);rProy();showT('Actualizado');}}
+
+// ===== VALOR =====
+function saveValor(){
+  const v={tipo:$v('val-tipo'),desc:$v('val-desc'),imp:parseFloat($v('val-imp'))||0,emp:$v('val-emp'),fecha:new Date().toLocaleDateString('es-ES')};
+  DB.push('valor',v);closeM('mValor');showT('✅ Registrado');clr('val-desc','val-imp','val-emp');rValor();rHome();
+}
+function rValor(){
+  const regs=DB.get('valor');
+  const aho=regs.filter(r=>r.tipo==='ahorro').reduce((s,r)=>s+(r.imp||0),0);
+  const ext=regs.filter(r=>r.tipo==='externo').reduce((s,r)=>s+(r.imp||0),0);
+  document.getElementById('vTotal').textContent=aho.toFixed(0)+' €';
+  document.getElementById('vRes').textContent=regs.filter(r=>r.tipo==='ahorro').length;
+  document.getElementById('vExt').textContent=ext.toFixed(0)+'€';
+  document.getElementById('vMej').textContent=regs.filter(r=>r.tipo==='mejora').length;
+  document.getElementById('vRoi').textContent=regs.filter(r=>r.tipo==='mejora').reduce((s,r)=>s+(r.imp||0),0).toFixed(0)+'€';
+  const el=document.getElementById('valorList');
+  if(!regs.length){el.innerHTML='<div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin registros</div>';return;}
+  el.innerHTML=[...regs].reverse().map(r=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--b1);gap:7px;"><div style="min-width:0;flex:1;"><div style="font-size:0.82rem;">${r.desc||'-'}</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);">${r.emp||''} · ${r.fecha}</div></div><div style="font-family:var(--fd);font-size:0.9rem;font-weight:700;color:${r.tipo==='ahorro'?'var(--ok)':r.tipo==='externo'?'var(--err)':'var(--gold)'};white-space:nowrap;">${r.tipo==='externo'?'-':'+'}${r.imp}€</div></div>`).join('');
+}
+
+// ===== PLATAFORMAS =====
+function savePlat(){
+  const p={nom:$v('pl-nom'),url:$v('pl-url'),desc:$v('pl-desc'),ico:$v('pl-ico')};
+  if(!p.nom){showT('Introduce el nombre');return;}
+  DB.push('plataformas',p);closeM('mPlat');showT('✅ Plataforma añadida');clr('pl-nom','pl-url','pl-desc');rPlat();
+}
+function rPlat(){
+  const plats=DB.get('plataformas');const el=document.getElementById('platList');
+  if(!plats.length){el.innerHTML='<div style="text-align:center;padding:24px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Añade tus plataformas externas<br>Solo pega la URL y listo</div>';return;}
+  el.innerHTML=plats.map(p=>`<div class="plat" onclick="${p.url?`window.open('${p.url}','_blank')`:'showT(\"Sin URL\")'};"><div class="plat-ico">${p.ico}</div><div style="flex:1;min-width:0;"><div style="font-family:var(--fd);font-size:0.88rem;font-weight:700;">${p.nom}</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--ok);">● Configurado</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);">${p.desc||''}</div></div><div style="display:flex;gap:5px;align-items:center;"><button class="btn bd bsm" onclick="delPlat(${p.id},event)">🗑️</button><span style="color:var(--t3)">›</span></div></div>`).join('');
+}
+function delPlat(id,e){e.stopPropagation();if(!confirm('¿Eliminar?'))return;DB.set('plataformas',DB.get('plataformas').filter(p=>p.id!==id));rPlat();showT('Eliminada');}
+
+// ===== CONTACTOS =====
+function saveCt(){
+  const c={nom:$v('ct-nom'),tel:$v('ct-tel'),email:$v('ct-email'),tipo:$v('ct-tipo'),notas:$v('ct-notas')};
+  if(!c.nom){showT('Introduce el nombre');return;}
+  DB.push('contactos',c);closeM('mContacto');showT('✅ Contacto guardado');clr('ct-nom','ct-tel','ct-email','ct-notas');rCts();
+}
+function rCts(){
+  const cts=DB.get('contactos');const el=document.getElementById('ctsList');
+  if(!cts.length){el.innerHTML='<div style="text-align:center;padding:10px;font-family:var(--fm);font-size:0.62rem;color:var(--t3);">Sin contactos</div>';return;}
+  el.innerHTML=cts.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--b1);gap:7px;"><div style="min-width:0;flex:1;"><div style="font-size:0.82rem;font-weight:500;">${c.nom}</div><div style="font-family:var(--fm);font-size:0.55rem;color:var(--t3);">${c.tipo} · ${c.tel||c.email||''}</div></div><div style="display:flex;gap:4px;">${c.tel?`<a href="tel:${c.tel}" class="btn bs bsm">📞</a>`:''}<button class="btn bd bsm" onclick="delItem('contactos',${c.id},rCts)">🗑️</button></div></div>`).join('');
+}
+function importAgenda(){
+  if('contacts' in navigator&&'ContactsManager' in window){
+    navigator.contacts.select(['name','tel','email'],{multiple:false}).then(cts=>{
+      cts.forEach(c=>DB.push('contactos',{nom:(c.name||[''])[0],tel:(c.tel||[''])[0],email:(c.email||[''])[0],tipo:'Otro',notas:''}));
+      rCts();showT(`✅ Contacto importado`);
+    }).catch(()=>showT('No se pudo acceder a la agenda'));
+  }else{showT('Importa el contacto manualmente o desde Chrome en Android');}
+}
+
+// ===== PRESUPUESTOS =====
+function savePresup(){
+  const p={con:$v('pre-con'),prov:$v('pre-prov'),imp:parseFloat($v('pre-imp'))||0,fecha:$v('pre-fecha'),est:$v('pre-est'),notas:$v('pre-notas')};
+  if(!p.con){showT('Introduce el concepto');return;}
+  DB.push('presupuestos',p);closeM('mPresup');showT('✅ Presupuesto guardado');clr('pre-con','pre-prov','pre-imp','pre-fecha','pre-notas');
+}
+
+// ===== USUARIOS =====
+function saveUsr(){
+  const u={nom:$v('usr-nom'),rol:$v('usr-rol')};
+  if(!u.nom){showT('Introduce el nombre');return;}
+  DB.push('usuarios',u);closeM('mUsuario');showT('✅ Usuario añadido');sv('usr-nom','');rUsrs();
+}
+function rUsrs(){
+  const us=DB.get('usuarios');const el=document.getElementById('userList');
+  let html=`<div class="srow"><div><div class="slbl">Tú — Administrador</div><div class="ssub" style="color:var(--gold);">Control total · Última palabra</div></div><span class="bdg b-gold">ADMIN</span></div>`;
+  html+=us.map(u=>`<div class="srow"><div><div class="slbl">${u.nom}</div><div class="ssub">${u.rol}</div></div><div style="display:flex;gap:5px;align-items:center;"><span class="bdg b-info">${u.rol.toUpperCase()}</span><button class="btn bd bsm" onclick="delItem('usuarios',${u.id},rUsrs)">🗑️</button></div></div>`).join('');
+  el.innerHTML=html;
+}
+
+// ===== CONFIG & IA =====
+function saveApiKey(){
+  const key=$v('apiKey'),prov=$v('aiProv');
+  if(!key){showT('Introduce tu API key');return;}
+  DB.setV('apikey',key);DB.setV('aiprov',prov);showT('✅ IA activada');updateIA();
+}
+function saveConfig(){DB.setV('nave',$v('cfgNave'));DB.setV('nombre',$v('cfgNombre'));showT('✅ Guardado');}
+function loadCfg(){
+  const nave=DB.getV('nave'),nom=DB.getV('nombre'),key=DB.getV('apikey'),prov=DB.getV('aiprov');
+  if(nave)sv('cfgNave',nave);if(nom)sv('cfgNombre',nom);if(key)sv('apiKey',key);if(prov)sv('aiProv',prov);
+}
+function updateAIHint(){
+  const hints={anthropic:'Tu empresa tiene plan Claude. Solicita API key a IT o usa tu cuenta personal.',openai:'Obtén tu key en platform.openai.com → API Keys',gemini:'Obtén tu key gratis en aistudio.google.com → Get API Key'};
+  document.getElementById('aiHint').textContent=hints[$v('aiProv')]||'';
+}
+function updateIA(){
+  const key=DB.getV('apikey'),prov=DB.getV('aiprov')||'anthropic';
+  const dot=document.getElementById('iaDot'),info=document.getElementById('iaInfo'),bdgEl=document.getElementById('iaBdg');
+  const labels={anthropic:'Claude',openai:'ChatGPT',gemini:'Gemini'};
+  if(key){dot.className='iadot on';info.textContent=`Conectado · ${labels[prov]||prov}`;bdgEl.innerHTML=`<span class="bdg b-ok">${labels[prov]}</span>`;document.getElementById('chatIn').disabled=false;document.getElementById('chatIn').placeholder='Pregunta sobre tu nave...';}
+  else{dot.className='iadot off';info.textContent='Sin API key — ve a Ajustes → IA';bdgEl.innerHTML='<span class="bdg b-warn">INACTIVA</span>';}
+}
+
+// ===== CHAT =====
+let isRec=false,recog=null;
+function toggleVoice(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){showT('Voz no disponible');return;}
+  if(isRec){recog?.stop();isRec=false;document.getElementById('vBtn').classList.remove('rec');}
+  else{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;recog=new SR();recog.lang='es-ES';recog.continuous=false;recog.onresult=e=>{sv('chatIn',e.results[0][0].transcript);isRec=false;document.getElementById('vBtn').classList.remove('rec');};recog.onerror=()=>{isRec=false;document.getElementById('vBtn').classList.remove('rec');};recog.start();isRec=true;document.getElementById('vBtn').classList.add('rec');}
+}
+function cTool(t){
+  const key=DB.getV('apikey');if(!key){showT('Activa la IA en Ajustes');return;}
+  if(t==='datos')sv('chatIn','¿Cuántos activos tengo y cuál es su estado?');
+  else if(t==='informe')sv('chatIn','Genera un informe de mantenimiento con los datos actuales');
+  else if(t==='web')sv('chatIn','Busca en internet: ');
+  else if(t==='placa')sv('chatIn','Lee esta placa técnica y añade el equipo al inventario');
+  else showT('Sube el archivo y descríbelo en el chat');
+  document.getElementById('chatIn').focus();
+}
+function addMsg(txt,who,loading=false){
+  const msgs=document.getElementById('chatMsgs');const div=document.createElement('div');div.className=`msg ${who}`;
+  div.innerHTML=`<div class="mn">${who==='u'?'Tú':'TIRITH IA'}</div>${who==='i'?'<div class="mtag">🧠 Analizando datos</div>':''}<div class="mb">${loading?'<span style="opacity:.5">Pensando...</span>':txt}</div>`;
+  msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;return div;
+}
+function sendChat(){
+  const inp=document.getElementById('chatIn'),msg=inp.value.trim();if(!msg)return;
+  const key=DB.getV('apikey');if(!key){showT('Activa la IA en Ajustes');return;}
+  addMsg(msg,'u');inp.value='';
+  const ld=addMsg('','i',true);
+  callAI(msg,buildCtx(),key).then(r=>{ld.remove();addMsg(r,'i');}).catch(()=>{ld.remove();addMsg('Error al conectar. Verifica tu API key en Ajustes.','i');});
+}
+document.getElementById('chatIn').addEventListener('keypress',e=>{if(e.key==='Enter')sendChat();});
+
+function buildCtx(){
+  const eq=DB.get('equipos'),inc=DB.get('incidencias'),ot=DB.get('ot'),pv=DB.get('preventivos'),stk=DB.get('stock'),mej=DB.get('mejoras');
+  const nave=DB.getV('nave')||'Nave Stark Future';
+  return `Eres TIRITH, el asistente técnico inteligente de ${nave}. Respondes en español, de forma técnica, precisa y útil. Conoces la normativa REBT, RITE, RSIF y buenas prácticas de mantenimiento industrial.
+ACTIVOS (${eq.length}): ${JSON.stringify(eq.slice(0,15))}
+INCIDENCIAS ABIERTAS: ${JSON.stringify(inc.filter(i=>i.est!=='cerrada').slice(0,8))}
+OT ABIERTAS: ${JSON.stringify(ot.filter(o=>o.est!=='cerrada').slice(0,8))}
+PREVENTIVOS: ${JSON.stringify(pv.slice(0,8))}
+STOCK BAJO: ${JSON.stringify(stk.filter(s=>s.act<=s.min).slice(0,5))}
+MEJORAS: ${JSON.stringify(mej.slice(0,8))}`;
+}
+
+async function callAI(msg,ctx,key){
+  const prov=DB.getV('aiprov')||'anthropic';
+  try{
+    if(prov==='openai'){const r=await fetch('https://api.openai.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${key}`},body:JSON.stringify({model:'gpt-4o-mini',max_tokens:1000,messages:[{role:'system',content:ctx},{role:'user',content:msg}]})});const d=await r.json();return d.choices?.[0]?.message?.content||'Sin respuesta';}
+    if(prov==='anthropic'){const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,system:ctx,messages:[{role:'user',content:msg}]})});const d=await r.json();return d.content?.[0]?.text||'Sin respuesta';}
+    if(prov==='gemini'){const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:ctx+'\n\nPregunta: '+msg}]}]})});const d=await r.json();return d.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta';}
+  }catch(e){throw e;}
+  return 'Proveedor no configurado';
+}
+
+// ===== INFORME =====
+function genInforme(){
+  const key=DB.getV('apikey');
+  if(!key){showT('Activa la IA para generar informes');closeM('mInforme');return;}
+  const tipo=$v('inf-tipo'),per=$v('inf-per');
+  closeM('mInforme');goTo('v-ia');
+  setTimeout(()=>{sv('chatIn',`Genera un ${tipo} para el período ${per||'actual'} con todos los datos disponibles`);sendChat();},300);
+}
+
+// ===== POPULATE SELECTS =====
+function populateSelects(){
+  const ubis=DB.get('ubicaciones'),sis=DB.get('sistemas');
+  ['sis-ubi','eq-ubi'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const cur=el.value;el.innerHTML='<option value="">Seleccionar...</option>'+ubis.map(u=>`<option value="${u.nom}">${u.nom}</option>`).join('');el.value=cur;});
+  ['eq-sis','pv-sis','inc-sis'].forEach(id=>{const el=document.getElementById(id);if(!el)return;const cur=el.value;el.innerHTML='<option value="">General</option>'+sis.map(s=>`<option value="${s.nom}">${s.nom}</option>`).join('');el.value=cur;});
+}
+
+// ===== BACKUP =====
+function exportData(){
+  const keys=['equipos','incidencias','ot','preventivos','checklists','stock','consumos','carpetas','mejoras','proyectos','valor','plataformas','contactos','usuarios','ubicaciones','sistemas','prevHist','presupuestos'];
+  const data={};keys.forEach(k=>data[k]=DB.get(k));data.meta={fecha:new Date().toISOString(),version:'3.0'};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`TIRITH_v3_${new Date().toISOString().split('T')[0]}.json`;a.click();showT('✅ Backup exportado');
+}
+function importData(input){
+  const file=input.files[0];if(!file)return;
+  const r=new FileReader();r.onload=e=>{try{const data=JSON.parse(e.target.result);const keys=['equipos','incidencias','ot','preventivos','checklists','stock','consumos','carpetas','mejoras','proyectos','valor','plataformas','contactos','usuarios','ubicaciones','sistemas','prevHist','presupuestos'];keys.forEach(k=>{if(data[k])DB.set(k,data[k]);});showT('✅ Backup importado');setTimeout(()=>location.reload(),1200);}catch{showT('Error al importar');}};r.readAsText(file);
+}
+function clearAll(){const keys=['equipos','incidencias','ot','preventivos','checklists','stock','consumos','carpetas','mejoras','proyectos','valor','plataformas','contactos','usuarios','ubicaciones','sistemas','prevHist','presupuestos'];keys.forEach(k=>localStorage.removeItem('t3_'+k));showT('Datos borrados');rHome();}
+
+// ===== GENERIC DELETE =====
+function delItem(key,id,cb){if(!confirm('¿Eliminar?'))return;DB.set(key,DB.get(key).filter(i=>i.id!==id));if(cb)cb();showT('Eliminado');}
+
+// ===== INIT =====
+function init(){
+  rHome();rBib();rUsrs();loadCfg();updateIA();populateSelects();
+  history.replaceState({v:'v-home'},'','');
+}
+init();
+</script>
+</body>
+</html>
