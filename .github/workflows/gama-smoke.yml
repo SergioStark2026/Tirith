@@ -13,6 +13,7 @@ jobs:
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      ANDROID_AVD_HOME: /home/runner/.android/avd
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/setup-java@v5
@@ -24,12 +25,16 @@ jobs:
           mkdir -p gama-apk
           gh run download 37144396824 -R "$GITHUB_REPOSITORY" -n GAMA-v0.6-debug-apk -D gama-apk
           test -f gama-apk/app-debug.apk
-      - name: Install emulator image
+      - name: Install emulator image and create AVD
         run: |
           SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          AVDMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
           "$SDKMANAGER" "platform-tools" "emulator" "system-images;android-36;google_apis;x86_64"
-          echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd -n gama-test -k "system-images;android-36;google_apis;x86_64" --force
+          mkdir -p "$ANDROID_AVD_HOME"
+          echo no | "$AVDMANAGER" create avd --force --name gama-test --package "system-images;android-36;google_apis;x86_64" --path "$ANDROID_AVD_HOME/gama-test.avd"
+          "$ANDROID_HOME/emulator/emulator" -list-avds
+          test -f "$ANDROID_AVD_HOME/gama-test.ini"
       - name: Boot emulator and launch GAMA
         run: |
           ADB="$ANDROID_HOME/platform-tools/adb"
