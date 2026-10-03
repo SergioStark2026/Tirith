@@ -32,17 +32,18 @@ jobs:
           echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd -n gama-test -k "system-images;android-36;google_apis;x86_64" --force
       - name: Boot emulator and launch GAMA
         run: |
+          ADB="$ANDROID_HOME/platform-tools/adb"
           "$ANDROID_HOME/emulator/emulator" -avd gama-test -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot >/tmp/emulator.log 2>&1 &
-          adb wait-for-device
-          timeout 240 bash -c 'until [ "$(adb shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 2; done'
-          adb install -r gama-apk/app-debug.apk
-          adb shell am force-stop com.gama.market
-          adb shell am start -W -n com.gama.market/.MainActivity | tee /tmp/am-start.txt
+          "$ADB" wait-for-device
+          timeout 240 bash -c 'until [ "$("$ANDROID_HOME/platform-tools/adb" shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 2; done'
+          "$ADB" install -r gama-apk/app-debug.apk
+          "$ADB" shell am force-stop com.gama.market
+          "$ADB" shell am start -W -n com.gama.market/.MainActivity | tee /tmp/am-start.txt
           sleep 5
-          PID="$(adb shell pidof com.gama.market | tr -d "\r")"
+          PID="$("$ADB" shell pidof com.gama.market | tr -d "\r")"
           test -n "$PID"
           echo "GAMA process PID=$PID"
-          if adb logcat -d '*:E' | grep -qE 'FATAL EXCEPTION.*com\.gama\.market|Process: com\.gama\.market.*FATAL'; then
-            adb logcat -d '*:E' | tail -200
+          if "$ADB" logcat -d '*:E' | grep -qE 'FATAL EXCEPTION.*com\.gama\.market|Process: com\.gama\.market.*FATAL'; then
+            "$ADB" logcat -d '*:E' | tail -200
             exit 1
           fi
