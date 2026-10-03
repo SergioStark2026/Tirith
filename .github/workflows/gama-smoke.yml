@@ -1,0 +1,48 @@
+name: GAMA Android smoke
+on:
+  push:
+    branches:
+      - gama-apk-v06-localbuild
+permissions:
+  contents: read
+  actions: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      ANDROID_HOME: /usr/local/lib/android/sdk
+      ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Download compiled APK
+        run: |
+          mkdir -p gama-apk
+          gh run download 37144396824 -R "$GITHUB_REPOSITORY" -n GAMA-v0.6-debug-apk -D gama-apk
+          test -f gama-apk/app-debug.apk
+      - name: Install emulator image
+        run: |
+          SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses >/dev/null || true
+          "$SDKMANAGER" "platform-tools" "emulator" "system-images;android-36;google_apis;x86_64"
+          echo no | "$ANDROID_HOME/cmdline-tools/latest/bin/avdmanager" create avd -n gama-test -k "system-images;android-36;google_apis;x86_64" --force
+      - name: Boot emulator and launch GAMA
+        run: |
+          "$ANDROID_HOME/emulator/emulator" -avd gama-test -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot >/tmp/emulator.log 2>&1 &
+          adb wait-for-device
+          timeout 240 bash -c 'until [ "$(adb shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 2; done'
+          adb install -r gama-apk/app-debug.apk
+          adb shell am force-stop com.gama.market
+          adb shell am start -W -n com.gama.market/.MainActivity | tee /tmp/am-start.txt
+          sleep 5
+          PID="$(adb shell pidof com.gama.market | tr -d "\r")"
+          test -n "$PID"
+          echo "GAMA process PID=$PID"
+          if adb logcat -d '*:E' | grep -qE 'FATAL EXCEPTION.*com\.gama\.market|Process: com\.gama\.market.*FATAL'; then
+            adb logcat -d '*:E' | tail -200
+            exit 1
+          fi

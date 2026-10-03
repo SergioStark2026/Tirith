@@ -1,13 +1,8 @@
 name: GAMA APK build
-
 on:
-  push:
-    branches:
-      - gama-apk-v06-localbuild
-
+  workflow_dispatch:
 permissions:
   contents: read
-
 jobs:
   build:
     runs-on: ubuntu-latest
