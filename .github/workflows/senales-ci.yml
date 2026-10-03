@@ -1,0 +1,67 @@
+name: Senales CI
+
+on:
+  push:
+    branches:
+      - ci-senales-v0.4
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct source
+        shell: bash
+        run: |
+          cat ci_payload/part00 ci_payload/part01 ci_payload/part02 ci_payload/part03 ci_payload/part04 ci_payload/part05 | base64 -d > /tmp/senales.zip
+          unzip -t /tmp/senales.zip
+          mkdir -p /tmp/senales-src
+          unzip -q /tmp/senales.zip -d /tmp/senales-src
+          cp -R /tmp/senales-src/SenalesApp ./SenalesApp
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK 36
+        shell: bash
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.6.0'
+
+      - name: Static QA
+        working-directory: SenalesApp
+        run: python scripts/static_qa.py
+
+      - name: Unit tests
+        working-directory: SenalesApp
+        run: gradle --no-daemon :app:testDebugUnitTest
+
+      - name: Android lint
+        working-directory: SenalesApp
+        run: gradle --no-daemon :app:lintDebug
+
+      - name: Build debug APK
+        working-directory: SenalesApp
+        run: gradle --no-daemon :app:assembleDebug
+
+      - name: Verify APK
+        shell: bash
+        run: |
+          test -s SenalesApp/app/build/outputs/apk/debug/app-debug.apk
+          unzip -t SenalesApp/app/build/outputs/apk/debug/app-debug.apk
+          sha256sum SenalesApp/app/build/outputs/apk/debug/app-debug.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Senales-v0.4.0-debug
+          path: SenalesApp/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
