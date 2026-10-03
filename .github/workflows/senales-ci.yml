@@ -21,6 +21,7 @@ jobs:
           mkdir -p /tmp/senales-src
           unzip -q /tmp/senales.zip -d /tmp/senales-src
           cp -R /tmp/senales-src/SenalesApp ./SenalesApp
+          sed -i 's/compileSdk = 36/compileSdk = 37/' SenalesApp/app/build.gradle.kts
 
       - uses: actions/setup-java@v5
         with:
@@ -32,9 +33,9 @@ jobs:
         with:
           packages: ''
 
-      - name: Install Android SDK 36
+      - name: Install Android SDK 37
         shell: bash
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        run: sdkmanager "platforms;android-37" "build-tools;36.0.0"
 
       - uses: gradle/actions/setup-gradle@v4
         with:
