@@ -1,0 +1,39 @@
+name: GAMA APK build
+
+on:
+  push:
+    branches:
+      - gama-apk-v06-localbuild
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract GAMA source
+        run: |
+          mkdir -p gama-src
+          unzip -q gama-build/gama_android_min.zip -d gama-src
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK
+        run: yes | sdkmanager --licenses >/dev/null || true; sdkmanager "platforms;android-36" "build-tools;35.0.0" "platform-tools"
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.13'
+      - name: Build debug APK
+        working-directory: gama-src
+        run: gradle --no-daemon assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GAMA-v0.6-debug-apk
+          path: gama-src/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14
