@@ -9,7 +9,7 @@ permissions:
 jobs:
   smoke:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 12
     env:
       ANDROID_HOME: /usr/local/lib/android/sdk
       ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
@@ -33,17 +33,19 @@ jobs:
       - name: Boot emulator and launch GAMA
         run: |
           ADB="$ANDROID_HOME/platform-tools/adb"
+          sudo chmod 666 /dev/kvm 2>/dev/null || true
           "$ANDROID_HOME/emulator/emulator" -avd gama-test -no-window -no-audio -no-boot-anim -gpu swiftshader_indirect -no-snapshot >/tmp/emulator.log 2>&1 &
-          "$ADB" wait-for-device
-          timeout 240 bash -c 'until [ "$("$ANDROID_HOME/platform-tools/adb" shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 2; done'
+          timeout 120 "$ADB" wait-for-device || { tail -120 /tmp/emulator.log; exit 1; }
+          timeout 240 bash -c 'until [ "$("$ANDROID_HOME/platform-tools/adb" shell getprop sys.boot_completed | tr -d "\r")" = "1" ]; do sleep 2; done' || { tail -120 /tmp/emulator.log; exit 1; }
           "$ADB" install -r gama-apk/app-debug.apk
           "$ADB" shell am force-stop com.gama.market
+          "$ADB" logcat -c
           "$ADB" shell am start -W -n com.gama.market/.MainActivity | tee /tmp/am-start.txt
-          sleep 5
+          sleep 8
           PID="$("$ADB" shell pidof com.gama.market | tr -d "\r")"
           test -n "$PID"
           echo "GAMA process PID=$PID"
-          if "$ADB" logcat -d '*:E' | grep -qE 'FATAL EXCEPTION.*com\.gama\.market|Process: com\.gama\.market.*FATAL'; then
-            "$ADB" logcat -d '*:E' | tail -200
+          if "$ADB" logcat -d | grep -qE 'FATAL EXCEPTION.*com\.gama\.market|Process: com\.gama\.market.*FATAL'; then
+            "$ADB" logcat -d | tail -250
             exit 1
           fi
