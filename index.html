@@ -1,17 +1,42 @@
 <!doctype html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="robots" content="noindex,nofollow">
-  <title>TheBoltLab · Repositorio legado</title>
-  <style>
-    body{font-family:system-ui,sans-serif;max-width:720px;margin:12vh auto;padding:0 24px;line-height:1.6;background:#111;color:#eee}
-    h1{font-size:2rem} p{color:#bbb}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1020">
+<title>BoltLabHub</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a2b;--panel2:#182238;--line:#26334f;--text:#eef4ff;--muted:#91a0ba;--accent:#4ec6ff;--ok:#5bd59a;--warn:#ffd166;--dim:#6f7e97}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#0b1020,#0d1424);color:var(--text);font-family:Inter,system-ui,sans-serif}
+main{max-width:980px;margin:auto;padding:22px 16px 50px}.top{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-bottom:18px}.brand{font-weight:800;font-size:1.45rem}.brand span{color:var(--accent)}.sub{color:var(--muted);font-size:.85rem;margin-top:3px}.badge{border:1px solid var(--line);background:var(--panel);padding:7px 10px;border-radius:999px;color:var(--muted);font-size:.75rem}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 20px}.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px}.n{font-size:1.6rem;font-weight:800}.l{color:var(--muted);font-size:.75rem;margin-top:3px}
+h2{font-size:1rem;margin:24px 0 10px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:15px;display:flex;flex-direction:column;gap:10px}.row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}.name{font-weight:800}.meta{color:var(--muted);font-size:.75rem;margin-top:3px}.status{font-size:.68rem;padding:4px 7px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}.ok{color:var(--ok)}.warn{color:var(--warn)}.dim{color:var(--dim)}.bar{height:7px;background:#0c1323;border-radius:99px;overflow:hidden}.bar>i{display:block;height:100%;background:var(--accent)}.next{font-size:.78rem;color:#c7d4e9}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions a{color:var(--text);text-decoration:none;border:1px solid var(--line);padding:7px 9px;border-radius:9px;font-size:.72rem;background:var(--panel2)}.foot{margin-top:24px;color:var(--muted);font-size:.72rem;line-height:1.5}
+@media(max-width:680px){.stats{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}.top{align-items:flex-start}.badge{display:none}}
+</style>
 </head>
 <body>
-  <h1>Repositorio legado</h1>
-  <p>Este contenido fue retirado durante la migración de proyectos a repositorios independientes de TheBoltLab.</p>
+<main>
+  <div class="top">
+    <div><div class="brand">⚡ <span>BoltLab</span>Hub</div><div class="sub">Centro de mando de proyectos · TheBoltLab</div></div>
+    <div class="badge">v0.1 · interno</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n">8</div><div class="l">proyectos</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">apps con CI</div></div>
+    <div class="stat"><div class="n">4</div><div class="l">último CI verde</div></div>
+    <div class="stat"><div class="n">2</div><div class="l">en reconstrucción</div></div>
+  </div>
+
+  <h2>Apps</h2>
+  <div class="grid">
+    <article class="card"><div class="row"><div><div class="name">ViviendaLab</div><div class="meta">Android · v0.20.0</div></div><div class="status ok">CI verde</div></div><div class="bar"><i style="width:78%"></i></div><div class="next">Siguiente: QA + pulido</div><div class="actions"><a href="https://github.com/TheBoltLab/ViviendaLab" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#viviendalab">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">Agricola</div><div class="meta">Android · v0.6.2</div></div><div class="status ok">CI verde</div></div><div class="bar"><i style="width:62%"></i></div><div class="next">Siguiente: Continuar producto + QA</div><div class="actions"><a href="https://github.com/TheBoltLab/Agricola" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#agricola">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">SOS</div><div class="meta">Android · v0.4.0</div></div><div class="status ok">CI verde</div></div><div class="bar"><i style="width:58%"></i></div><div class="next">Siguiente: Continuar hardening</div><div class="actions"><a href="https://github.com/TheBoltLab/SOS" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#sos">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">Gama</div><div class="meta">Android · v0.6.0</div></div><div class="status ok">CI verde</div></div><div class="bar"><i style="width:54%"></i></div><div class="next">Siguiente: Continuar producto + QA</div><div class="actions"><a href="https://github.com/TheBoltLab/Gama" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#gama">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">Viajes</div><div class="meta">Producto definido</div></div><div class="status warn">Sin app todavía</div></div><div class="bar"><i style="width:28%"></i></div><div class="next">Siguiente: Reconstruir MVP Android</div><div class="actions"><a href="https://github.com/TheBoltLab/Viajes" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#viajes">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">Alergicos</div><div class="meta">Producto definido</div></div><div class="status warn">Sin app todavía</div></div><div class="bar"><i style="width:28%"></i></div><div class="next">Siguiente: Reconstruir MVP Android</div><div class="actions"><a href="https://github.com/TheBoltLab/Alergicos" target="_blank" rel="noreferrer">GitHub ↗</a><a href="#alergicos">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">OpsCore</div><div class="meta">Rebirth de Tirith</div></div><div class="status warn">Staging</div></div><div class="bar"><i style="width:34%"></i></div><div class="next">Siguiente: Sanear + validar MVP</div><div class="actions"><a href="#opscore">Ficha</a></div></article><article class="card"><div class="row"><div><div class="name">BoltLabHub</div><div class="meta">Control interno</div></div><div class="status dim">Staging</div></div><div class="bar"><i style="width:20%"></i></div><div class="next">Siguiente: Separar a repo propio</div><div class="actions"><a href="#boltlabhub">Ficha</a></div></article>
+  </div>
+
+  <h2>Reglas del centro de mando</h2>
+  <div class="card">
+    <div class="next">GitHub es la fuente de verdad del código. BoltLabHub solo resume estado, fase, CI y siguiente acción. No guardará secretos ni tokens en el navegador. La automatización con datos privados de GitHub se añadirá más adelante mediante una integración segura.</div>
+  </div>
+  <div class="foot">Prototipo de staging. Antes de publicarlo se moverá a un repositorio limpio e independiente.</div>
+</main>
 </body>
 </html>
