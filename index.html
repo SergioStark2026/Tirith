@@ -6,13 +6,14 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0e1014">
-<title>TIRITH v3 — Stark Future</title>
+<link rel="manifest" href="manifest.webmanifest">
+<title>OpsCore — Facility Operations</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg:#0e1014; --s1:#13161d; --s2:#181c26; --s3:#1e2330;
   --b1:#252b3d; --b2:#2e3650; --b3:#3a4260;
-  --gold:#c8921a; --gold2:#e8ad3a; --gd:rgba(200,146,26,0.14);
+  --gold:#14b8d4; --gold2:#67e8f9; --gd:rgba(20,184,212,0.14);
   --ok:#2db876; --okd:rgba(45,184,118,0.12);
   --warn:#e09010; --warnd:rgba(224,144,16,0.12);
   --err:#d44040; --errd:rgba(212,64,64,0.12);
@@ -45,7 +46,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:14px;t
 .hdr-time{font-family:var(--fm);font-size:0.58rem;color:var(--t3);text-align:right;line-height:1.4;}
 .ibtn{width:28px;height:28px;border-radius:var(--rs);background:var(--s2);border:1px solid var(--b1);color:var(--t2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.85rem;transition:all .2s;}
 .ibtn:hover{border-color:var(--gold);color:var(--gold);}
-.role-badge{font-family:var(--fm);font-size:0.5rem;padding:2px 6px;border-radius:3px;background:var(--gd);color:var(--gold);border:1px solid rgba(200,146,26,.3);}
+.role-badge{font-family:var(--fm);font-size:0.5rem;padding:2px 6px;border-radius:3px;background:var(--gd);color:var(--gold);border:1px solid rgba(20,184,212,.3);}
 
 /* CONTENT */
 #cnt{flex:1;overflow:hidden;position:relative;}
@@ -84,7 +85,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--fb);font-size:14px;t
 .b-warn{background:var(--warnd);color:var(--warn);border:1px solid rgba(224,144,16,.25);}
 .b-err{background:var(--errd);color:var(--err);border:1px solid rgba(212,64,64,.25);}
 .b-info{background:var(--infod);color:var(--info);border:1px solid rgba(61,142,240,.25);}
-.b-gold{background:var(--gd);color:var(--gold);border:1px solid rgba(200,146,26,.3);}
+.b-gold{background:var(--gd);color:var(--gold);border:1px solid rgba(20,184,212,.3);}
 .b-purple{background:var(--purpled);color:var(--purple);border:1px solid rgba(139,92,246,.25);}
 
 /* FORMS */
@@ -143,7 +144,7 @@ textarea{resize:vertical;min-height:60px;}
 .tabs{display:flex;gap:4px;padding:0 11px 9px;overflow-x:auto;scrollbar-width:none;}
 .tabs::-webkit-scrollbar{display:none;}
 .tab{flex-shrink:0;padding:5px 12px;border-radius:var(--rs);border:1px solid var(--b1);background:transparent;color:var(--t3);font-family:var(--fm);font-size:0.6rem;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
-.tab.active{background:var(--gd);border-color:rgba(200,146,26,.4);color:var(--gold);}
+.tab.active{background:var(--gd);border-color:rgba(20,184,212,.4);color:var(--gold);}
 
 /* PILLAR GRID */
 .pg{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 11px 9px;}
@@ -171,7 +172,7 @@ textarea{resize:vertical;min-height:60px;}
 .mb{padding:8px 12px;border-radius:13px;font-size:0.8rem;line-height:1.55;}
 .msg.u .mb{background:var(--gold);color:#080808;border-bottom-right-radius:3px;font-weight:500;}
 .msg.i .mb{background:var(--s1);border:1px solid var(--b1);color:var(--t1);border-bottom-left-radius:3px;}
-.mtag{display:inline-flex;align-items:center;gap:3px;background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:3px;padding:2px 6px;font-family:var(--fm);font-size:0.5rem;color:var(--gold);margin-bottom:4px;}
+.mtag{display:inline-flex;align-items:center;gap:3px;background:var(--gd);border:1px solid rgba(20,184,212,.2);border-radius:3px;padding:2px 6px;font-family:var(--fm);font-size:0.5rem;color:var(--gold);margin-bottom:4px;}
 .cb{padding:8px 11px max(10px,env(safe-area-inset-bottom));background:var(--s1);border-top:1px solid var(--b1);flex-shrink:0;}
 .ctols{display:flex;gap:5px;margin-bottom:6px;overflow-x:auto;scrollbar-width:none;}
 .ctols::-webkit-scrollbar{display:none;}
@@ -277,7 +278,7 @@ textarea{resize:vertical;min-height:60px;}
 <div class="hdr">
   <div class="hdr-logo" onclick="goTo('v-home')">
     <div class="ring"></div>
-    <div><div class="logo-t">TIR<span>ITH</span></div><div class="logo-s">STARK FUTURE · NAVE</div></div>
+    <div><div class="logo-t">OPS<span>CORE</span></div><div class="logo-s">FACILITY · OPERATIONS</div></div>
   </div>
   <div class="hdr-r">
     <div class="role-badge" id="roleBadge">ADMIN</div>
@@ -525,11 +526,11 @@ textarea{resize:vertical;min-height:60px;}
   <div class="cw">
     <div class="ias">
       <div class="iadot" id="iaDot"></div>
-      <div style="flex:1;"><div style="font-family:var(--fd);font-size:0.8rem;font-weight:700;">TIRITH IA</div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);" id="iaInfo">Configura API key en Ajustes</div></div>
+      <div style="flex:1;"><div style="font-family:var(--fd);font-size:0.8rem;font-weight:700;">OPSCORE IA</div><div style="font-family:var(--fm);font-size:0.5rem;color:var(--t3);" id="iaInfo">Configura API key en Ajustes</div></div>
       <div id="iaBdg"></div>
     </div>
     <div class="cm" id="chatMsgs">
-      <div class="msg i"><div class="mn">TIRITH IA</div><div class="mb">Hola. Soy el asistente técnico de TIRITH.<br><br>Para activarme ve a <strong>Ajustes → IA</strong> y configura tu API key.<br><br>Compatible con <strong>Claude</strong> (recomendado — tu empresa tiene plan), <strong>ChatGPT</strong> y <strong>Gemini</strong>.<br><br>Una vez activo podré leer tus activos, incidencias, preventivos, documentos, analizar fotos de placas, planos y facturas.</div></div>
+      <div class="msg i"><div class="mn">OPSCORE IA</div><div class="mb">Hola. Soy el asistente técnico de OPSCORE.<br><br>Para activarme ve a <strong>Ajustes → IA</strong> y configura tu API key.<br><br>Integración experimental compatible con <strong>Claude</strong>, <strong>ChatGPT</strong> y <strong>Gemini</strong>.<br><br>Una vez activo podré leer tus activos, incidencias, preventivos, documentos, analizar fotos de placas, planos y facturas.</div></div>
     </div>
     <div class="cb">
       <div class="ctols">
@@ -558,17 +559,17 @@ textarea{resize:vertical;min-height:60px;}
   <div class="card"><div class="ct">Inteligencia Artificial</div>
     <div class="fld"><label>Proveedor</label>
       <select id="aiProv" onchange="updateAIHint()">
-        <option value="anthropic">Claude — Anthropic (recomendado)</option>
+        <option value="anthropic">Claude — Anthropic</option>
         <option value="openai">ChatGPT — OpenAI</option>
         <option value="gemini">Gemini — Google</option>
       </select>
     </div>
-    <div class="fld"><label>API Key</label><input type="text" id="apiKey" placeholder="sk-ant-... / sk-... / AIza..."></div>
-    <div style="background:var(--s2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--t3);" id="aiHint">Tu empresa tiene plan Claude. Solicita la API key a IT.</div>
+    <div class="fld"><label>API Key</label><input type="password" id="apiKey" placeholder="sk-ant-... / sk-... / AIza..."></div>
+    <div style="background:var(--s2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--t3);" id="aiHint">Integración experimental. Usa solo una clave personal de desarrollo.</div>
     <button class="btn bp bsm" onclick="saveApiKey()">✅ Activar IA</button>
   </div>
   <div class="card"><div class="ct">Nave Industrial</div>
-    <div class="fld"><label>Nombre de la nave</label><input type="text" id="cfgNave" placeholder="Nave Principal Stark Future"></div>
+    <div class="fld"><label>Nombre de la nave</label><input type="text" id="cfgNave" placeholder="Instalación principal"></div>
     <div class="fld"><label>Tu nombre / Rol</label><input type="text" id="cfgNombre" placeholder="Responsable Técnico Servicios Generales"></div>
     <button class="btn bp bsm" onclick="saveConfig()">Guardar</button>
   </div>
@@ -589,7 +590,7 @@ textarea{resize:vertical;min-height:60px;}
     <input type="file" id="impFile" accept=".json" style="display:none" onchange="importData(this)">
     <div style="margin-top:9px;"><button class="btn bd bsm" onclick="if(confirm('¿Borrar todos los datos?'))clearAll()">🗑️ Borrar todo</button></div>
   </div>
-  <div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.55rem;color:var(--t3);">TIRITH v3.0 · GMAO Servicios Generales · Stark Future<br><span style="color:var(--gold)">La fortaleza que custodia el conocimiento de tu nave</span></div>
+  <div style="text-align:center;padding:18px;font-family:var(--fm);font-size:0.55rem;color:var(--t3);">OPSCORE v3.0 · GMAO · Operaciones y mantenimiento<br><span style="color:var(--gold)">Control operativo de instalaciones, mantenimiento e incidencias</span></div>
 </div>
 
 </div><!-- end cnt -->
@@ -709,7 +710,7 @@ textarea{resize:vertical;min-height:60px;}
     </div>
   </div>
   <div class="fld"><label>Notas adicionales</label><textarea id="inc-notas" style="min-height:50px;" placeholder="Condiciones, accesos especiales..."></textarea></div>
-  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 Una incidencia puede generar una OT. Se gestionan por separado.</div>
+  <div style="background:var(--gd);border:1px solid rgba(20,184,212,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 Una incidencia puede generar una OT. Se gestionan por separado.</div>
   <div class="br"><button class="btn bp" onclick="saveInc()">Registrar incidencia</button><button class="btn bs" onclick="closeM('mInc')">Cancelar</button></div>
 </div></div>
 
@@ -735,7 +736,7 @@ textarea{resize:vertical;min-height:60px;}
   </div>
   <div class="fld"><label>Incidencia vinculada (opcional)</label><input type="text" id="ot-inc" placeholder="ID o descripción incidencia"></div>
   <div class="fld"><label>Materiales necesarios</label><textarea id="ot-mats" style="min-height:45px;" placeholder="Lista de materiales previstos..."></textarea></div>
-  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 El coste se calcula automáticamente al añadir materiales usados al cerrar la OT</div>
+  <div style="background:var(--gd);border:1px solid rgba(20,184,212,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.6rem;color:var(--gold);">💡 El coste se calcula automáticamente al añadir materiales usados al cerrar la OT</div>
   <div class="br"><button class="btn bp" onclick="saveOT()">Abrir OT</button><button class="btn bs" onclick="closeM('mOT')">Cancelar</button></div>
 </div></div>
 
@@ -879,7 +880,7 @@ textarea{resize:vertical;min-height:60px;}
   <div class="fld"><label>Tipo</label><select id="inf-tipo"><option>Informe mensual de mantenimiento</option><option>Estado de instalaciones</option><option>Incidencias y OT</option><option>Valor generado y ahorro</option><option>Consumos energéticos</option><option>Stock crítico</option></select></div>
   <div class="fld"><label>Período</label><input type="text" id="inf-per" placeholder="Ej: Marzo 2026"></div>
   <div class="fld"><label>Observaciones</label><textarea id="inf-obs" style="min-height:45px;" placeholder="Notas adicionales..."></textarea></div>
-  <div style="background:var(--gd);border:1px solid rgba(200,146,26,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.58rem;color:var(--gold);">💡 Con IA activa se genera automáticamente con tus datos</div>
+  <div style="background:var(--gd);border:1px solid rgba(20,184,212,.2);border-radius:var(--rs);padding:8px;margin-bottom:9px;font-family:var(--fm);font-size:0.58rem;color:var(--gold);">💡 Con IA activa se genera automáticamente con tus datos</div>
   <div class="br"><button class="btn bp" onclick="genInforme()">Generar</button><button class="btn bs" onclick="closeM('mInforme')">Cancelar</button></div>
 </div></div>
 
@@ -1383,7 +1384,7 @@ function loadCfg(){
   if(nave)sv('cfgNave',nave);if(nom)sv('cfgNombre',nom);if(key)sv('apiKey',key);if(prov)sv('aiProv',prov);
 }
 function updateAIHint(){
-  const hints={anthropic:'Tu empresa tiene plan Claude. Solicita API key a IT o usa tu cuenta personal.',openai:'Obtén tu key en platform.openai.com → API Keys',gemini:'Obtén tu key gratis en aistudio.google.com → Get API Key'};
+  const hints={anthropic:'Usa una clave personal de desarrollo. No publiques claves en el código.',openai:'Obtén tu key en platform.openai.com → API Keys',gemini:'Obtén tu key gratis en aistudio.google.com → Get API Key'};
   document.getElementById('aiHint').textContent=hints[$v('aiProv')]||'';
 }
 function updateIA(){
@@ -1412,7 +1413,7 @@ function cTool(t){
 }
 function addMsg(txt,who,loading=false){
   const msgs=document.getElementById('chatMsgs');const div=document.createElement('div');div.className=`msg ${who}`;
-  div.innerHTML=`<div class="mn">${who==='u'?'Tú':'TIRITH IA'}</div>${who==='i'?'<div class="mtag">🧠 Analizando datos</div>':''}<div class="mb">${loading?'<span style="opacity:.5">Pensando...</span>':txt}</div>`;
+  div.innerHTML=`<div class="mn">${who==='u'?'Tú':'OPSCORE IA'}</div>${who==='i'?'<div class="mtag">🧠 Analizando datos</div>':''}<div class="mb">${loading?'<span style="opacity:.5">Pensando...</span>':txt}</div>`;
   msgs.appendChild(div);msgs.scrollTop=msgs.scrollHeight;return div;
 }
 function sendChat(){
@@ -1426,8 +1427,8 @@ document.getElementById('chatIn').addEventListener('keypress',e=>{if(e.key==='En
 
 function buildCtx(){
   const eq=DB.get('equipos'),inc=DB.get('incidencias'),ot=DB.get('ot'),pv=DB.get('preventivos'),stk=DB.get('stock'),mej=DB.get('mejoras');
-  const nave=DB.getV('nave')||'Nave Stark Future';
-  return `Eres TIRITH, el asistente técnico inteligente de ${nave}. Respondes en español, de forma técnica, precisa y útil. Conoces la normativa REBT, RITE, RSIF y buenas prácticas de mantenimiento industrial.
+  const nave=DB.getV('nave')||'Instalación principal';
+  return `Eres OPSCORE, el asistente técnico inteligente de ${nave}. Respondes en español, de forma técnica, precisa y útil. Conoces la normativa REBT, RITE, RSIF y buenas prácticas de mantenimiento industrial.
 ACTIVOS (${eq.length}): ${JSON.stringify(eq.slice(0,15))}
 INCIDENCIAS ABIERTAS: ${JSON.stringify(inc.filter(i=>i.est!=='cerrada').slice(0,8))}
 OT ABIERTAS: ${JSON.stringify(ot.filter(o=>o.est!=='cerrada').slice(0,8))}
@@ -1467,7 +1468,7 @@ function exportData(){
   const keys=['equipos','incidencias','ot','preventivos','checklists','stock','consumos','carpetas','mejoras','proyectos','valor','plataformas','contactos','usuarios','ubicaciones','sistemas','prevHist','presupuestos'];
   const data={};keys.forEach(k=>data[k]=DB.get(k));data.meta={fecha:new Date().toISOString(),version:'3.0'};
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`TIRITH_v3_${new Date().toISOString().split('T')[0]}.json`;a.click();showT('✅ Backup exportado');
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`OPSCORE_v3_${new Date().toISOString().split('T')[0]}.json`;a.click();showT('✅ Backup exportado');
 }
 function importData(input){
   const file=input.files[0];if(!file)return;
@@ -1485,5 +1486,6 @@ function init(){
 }
 init();
 </script>
+<script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));}</script>
 </body>
 </html>
