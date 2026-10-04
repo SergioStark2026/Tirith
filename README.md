@@ -1,13 +1,11 @@
-# Legacy repository
+# BoltLabHub
 
-Este repositorio queda conservado únicamente como referencia temporal de migración.
+Centro de mando interno de TheBoltLab.
 
-Las aplicaciones activas se mantienen en repositorios independientes bajo **TheBoltLab**:
-- ViviendaLab
-- Agricola
-- SOS
-- Gama
-- Viajes
-- Alergicos
+## Objetivo
+Ver en una sola pantalla el estado de todas las apps: versión, fase del workflow, CI, QA y siguiente acción.
 
-No desarrollar ni publicar desde este repositorio.
+## Estado
+Prototipo inicial de staging. Se moverá a un repositorio privado limpio `TheBoltLab/BoltLabHub`.
+
+No guardar secretos, tokens o credenciales en el frontend.
