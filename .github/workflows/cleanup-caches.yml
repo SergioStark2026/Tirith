@@ -1,0 +1,60 @@
+name: Cleanup Actions Storage
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 3 * * 0'
+  push:
+    paths:
+      - .github/workflows/cleanup-caches.yml
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: cleanup-actions-storage
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Delete repository Actions caches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Current Actions caches for $REPO:"
+          gh cache list --repo "$REPO" --limit 100 || true
+
+          echo "Deleting all Actions caches for $REPO..."
+          gh cache delete --repo "$REPO" --all --succeed-on-no-caches
+
+          echo "Remaining Actions caches for $REPO:"
+          gh cache list --repo "$REPO" --limit 100 || true
+
+      - name: Delete workflow artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Deleting GitHub Actions artifacts for $REPO..."
+          gh api --paginate "repos/$REPO/actions/artifacts?per_page=100" --jq '.artifacts[].id' |
+          while read -r artifact_id; do
+            [ -z "$artifact_id" ] && continue
+            echo "Deleting artifact $artifact_id"
+            gh api -X DELETE "repos/$REPO/actions/artifacts/$artifact_id"
+          done
+
+          echo "Remaining artifact count:"
+          gh api "repos/$REPO/actions/artifacts?per_page=1" --jq '.total_count'
+
+      - name: Confirm preserved release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Release assets are NOT deleted by this workflow."
+          gh release list --repo "$REPO" --limit 10 || true
